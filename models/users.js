@@ -11,6 +11,8 @@ const User = {
     };
     const existingUserResult = await pool.query(existingUserQuery);
 
+    
+
     if (existingUserResult.rows.length > 0) {
       throw new Error("User already exists, Please login");
     }

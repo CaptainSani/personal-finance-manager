@@ -1,15 +1,14 @@
-// config/auth.js
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 
-const secretKey = "SycamorePFM";
+
+// Middleware to authenticate JWT token for protected routes
 
 const authenticate = async (req, res, next) => {
   const token = req.header("Authorization");
   if (!token) return res.status(401).send("Access denied. No token provided.");
 
   try {
-    const decoded = jwt.verify(token, secretKey);
+    const decoded = jwt.verify(token);
     req.user = decoded;
     next();
   } catch (ex) {
@@ -17,4 +16,4 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-module.exports = { authenticate, secretKey };
+module.exports = { authenticate };
