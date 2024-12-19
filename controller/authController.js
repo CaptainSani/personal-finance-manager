@@ -16,7 +16,7 @@ const authController = {
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_SECRET_EXPIRY,
         });
-        res.status(200).json({ token, user: createdUser, text: 'User created succesfully' });
+        res.status(200).json({message: `User ${username} Registered succesfully` });
       } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Registration failed, Login ?' });
