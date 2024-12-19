@@ -3,11 +3,14 @@ const env = require("dotenv").config();
 
 // Connect to the PostgreSQL database
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "PersonalFinanceManager",
-  password: "1234567890",
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
+  ssl: {
+    rejectUnauthorized: false, // Required for Render PostgreSQL
+  },
 });
 
 pool.query("SELECT NOW()", (err, res) => {
@@ -36,6 +39,21 @@ pool.query(
 );
 
 pool.query(
+  `CREATE TABLE IF NOT EXISTS categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  ); `,
+  (err, res) => {
+    if (err) {
+      console.error("Error creating categories table:", err);
+    } else {
+      console.log("Categories Table created successfully");
+    }
+  }
+);
+
+pool.query(
     `CREATE TABLE IF NOT EXISTS budgets (
       id SERIAL PRIMARY KEY,
       title VARCHAR(100) NOT NULL,
@@ -50,21 +68,6 @@ pool.query(
         console.error("Error creating budgets table:", err);
       } else {
         console.log("Budgets Table created successfully");
-      }
-    }
-  );
-  
-  pool.query(
-    `CREATE TABLE IF NOT EXISTS categories (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(50) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    ); `,
-    (err, res) => {
-      if (err) {
-        console.error("Error creating categories table:", err);
-      } else {
-        console.log("Categories Table created successfully");
       }
     }
   );
