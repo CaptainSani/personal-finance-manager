@@ -14,7 +14,7 @@ const authController = {
         const user = await User.createUser(username, email, password);
         const createdUser = user;
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-          expiresIn: '1h'
+          expiresIn: process.env.JWT_SECRET_EXPIRY,
         });
         res.status(200).json({ token, user: createdUser, text: 'User created succesfully' });
       } catch (error) {
@@ -33,9 +33,9 @@ const authController = {
     
           const user = await User.loginUser(email, password);
           const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-            expiresIn: '1h',
+            expiresIn: process.env.JWT_SECRET_EXPIRY,
           });
-          res.json({ token, });
+          res.json({ message: `${email} Logged-In Successfully` , token });
         } catch (error) {
           console.error(error);
           res.status(401).json({ error: 'Invalid email or password' });
