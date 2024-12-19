@@ -13,10 +13,10 @@ const authController = {
   
         const user = await User.createUser(username, email, password);
         const createdUser = user;
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-          expiresIn: '1h'
-        });
-        res.status(200).json({ token, user: createdUser, text: 'User created succesfully' });
+        // const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+        //   expiresIn: '1h'
+        // });
+        res.status(200).json({ user: createdUser, text: 'User created succesfully' });
       } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Registration failed, Login ?' });
