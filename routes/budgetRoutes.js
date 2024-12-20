@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const BudgetController = require('../controller/budgetController');
-const { authenticate } = require('../config/auth');
+const { authenticate } = require('../midddleware/auth');
 
 // Create a new budget
 router.post('/budgets/create', authenticate, BudgetController.createBudget);
