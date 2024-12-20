@@ -15,10 +15,12 @@ const authController = {
         }
   
         const user = await User.createUser(username, email, password);
+
         res.status(200).json({
           status: "success",
           statusCode: "200",
           message: `User ${username} Registered succesfully` } );
+
       } catch (error) {
         console.error(error);
         res.status(500).json({ 
@@ -41,12 +43,14 @@ const authController = {
     
           const user = await User.loginUser(email, password);
           const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-            expiresIn: '1h',
+            expiresIn: process.env.JWT_SECRET_EXPIRY,
           });
+
           res.json({ 
             status: "Success",
             statusCode: "200",
             message: `${email} Logged-In Successfully` , token });
+
         } catch (error) {
           console.error(error);
           res.status(401).json({
