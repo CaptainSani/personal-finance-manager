@@ -1,5 +1,5 @@
 const Budget = require('../models/budget');
-//const authenticateToken = require('../middleware/authenticateToken');
+
 
 const budgetController = {
   async createBudget(req, res) {
