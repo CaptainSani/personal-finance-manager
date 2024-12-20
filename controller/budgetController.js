@@ -4,7 +4,13 @@ const Budget = require('../models/budget');
 const budgetController = {
   async createBudget(req, res) {
     try {
-      const budget = await Budget.create(req.body.title, req.body.totalAmount, req.body.duration, req.user.id);
+      const { title, totalAmount, duration } = req.body;
+  
+      if (!title || !totalAmount || !duration) {
+        return res.status(400).json({ message: 'Please provide all required fields' });
+      }
+  
+      const budget = await Budget.create(title, totalAmount, duration, req.user.id);
       res.json(budget);
     } catch (err) {
       console.error(err);
