@@ -29,7 +29,7 @@ const User = {
     return result.rows[0];
   },
 
-  async loginUser(email, password, authenticate) {
+  async loginUser(email, password) {
     try {
       const result = await pool.query("SELECT * FROM users WHERE email = $1", [
         email,
@@ -55,7 +55,7 @@ const User = {
     }
   },
 
-  async getUserByEmail(email) {
+  async getByEmail(email) {
     const query = {
       text: `SELECT * FROM users WHERE email = $1`,
       values: [email],
@@ -64,7 +64,7 @@ const User = {
     return result.rows[0];
   },
 
-  async getUserById(id) {
+  async getById(id) {
     const query = {
       text: `SELECT * FROM users where id = $1`,
       values: [id],
