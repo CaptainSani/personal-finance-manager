@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
+const env = require('dotenv').config();
 
 const authController = {
     async register(req, res) {
@@ -18,7 +19,7 @@ const authController = {
         res.status(200).json({
           status: "success",
           statusCode: "200",
-          message: `User ${username} Registered Succesfully` });
+          message: `User ${username} Registered Succesfully` } );
 
       } catch (error) {
         console.error(error);
