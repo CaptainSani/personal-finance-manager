@@ -1,7 +1,7 @@
 const db = require("../config/database");
 
 class Budget {
-  async create(title, totalAmount, duration, userId) {
+ static async create(title, totalAmount, duration, userId) {
 
     if (typeof title !== 'string' || typeof totalAmount !== 'number' || typeof duration !== 'string') {
       throw new Error('Invalid input types');
@@ -19,7 +19,7 @@ class Budget {
     }
   }
 
-  async getAll(userId) {
+  static async getAll(userId) {
     const query = {
       text: `SELECT * FROM budgets WHERE user_id = $1`,
       values: [userId],
@@ -33,7 +33,7 @@ class Budget {
     }
   }
 
-  async getById(id, userId) {
+  static async getById(id, userId) {
     const query = {
       text: `SELECT * FROM budgets WHERE id = $1 AND user_id = $2`,
       values: [id, userId],
@@ -47,7 +47,7 @@ class Budget {
     }
   }
 
-  async update(id, title, totalAmount, duration, userId) {
+  static async update(id, title, totalAmount, duration, userId) {
     const query = {
       text: `UPDATE budgets SET title = $1, total_amount = $2, duration = $3 WHERE id = $4 AND user_id = $5 RETURNING *`,
       values: [title, totalAmount, duration, id, userId],
@@ -61,7 +61,7 @@ class Budget {
     }
   }
 
-  async deleteById(id, userId) {
+  static async deleteById(id, userId) {
     const query = {
       text: `DELETE FROM budgets WHERE id = $1 AND user_id = $2 RETURNING *`,
       values: [id, userId],

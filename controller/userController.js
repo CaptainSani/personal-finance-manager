@@ -24,8 +24,8 @@ const userController = {
             });
           }
       
-          res.json({ 
-            status: "Success",
+          res.status(200).json({ 
+            status: "Success OK",
             statusCode: "200",
             message: "Username Retrieved Successfully",
             user: {
@@ -69,9 +69,9 @@ const userController = {
           }
       
           
-          res.json({ 
+          res.status(200).json({ 
             status: "Success",
-            statusCode: "200",
+            statusCode: "200 OK",
             message: "Username And Email Retrieved Successfully",
             user: {
               username: user.username,

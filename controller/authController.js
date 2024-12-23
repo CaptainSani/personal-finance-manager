@@ -16,14 +16,14 @@ const authController = {
         const user = await User.createUser(username, email, password);
 
         res.status(200).json({
-          status: "success",
+          status: "Success OK",
           statusCode: "200",
           message: `User ${username} Registered Succesfully` } );
 
       } catch (error) {
         console.error(error);
         res.status(500).json({ 
-          status: "error",
+          status: "Internal Server Error",
           statusCode: "500",
           error: 'Registration failed, Login ?' });
       }
@@ -46,14 +46,14 @@ const authController = {
           });
 
           res.json({ 
-            status: "Success",
+            status: "Success OK",
             statusCode: "200",
             message: `${email} Logged-In Successfully` , token });
 
         } catch (error) {
           console.error(error);
           res.status(401).json({
-            status: "Internal server error",
+            status: "Unathourized",
             statusCode: "401",
             error: 'Invalid email or password' });
         }
