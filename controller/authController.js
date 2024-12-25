@@ -13,7 +13,7 @@ const authController = {
             error: 'Please provide all required fields' });
         }
   
-        const user = await User.createUser(username, email, password);
+        await User.createUser(username, email, password);
 
         res.status(200).json({
           status: "Success OK",
