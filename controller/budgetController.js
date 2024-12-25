@@ -105,6 +105,7 @@ const budgetController = {
         res.status(201).json({
           status: "Created OK",
           statusCode: "201",
+          message: `Budget With Id ${req.params.id} Updated Succesfully`,
           budget});
       }
     } catch (err) {
@@ -123,7 +124,7 @@ const budgetController = {
       if (!budget) {
         res.status(404).json({ 
           status: "Bad Request",
-          statusCode: "400",
+          statusCode: "404",
           error: `Budget With Id ${req.params.id} Not found` });
       } else {
         res.status(200).json({ 
