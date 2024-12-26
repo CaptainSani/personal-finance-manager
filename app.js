@@ -3,6 +3,7 @@ const app = express();
 const authRoutes = require("./routes/authRoutes");
 const budgetRoutes = require("./routes/budgetRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
+const usersRoutes = require("./routes/userRoutes");
 const cors = require('cors');
 const dotenv = require('dotenv');
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/auth", authRoutes);
+app.use("/api", usersRoutes);
 
 app.use("/api", budgetRoutes);
 
