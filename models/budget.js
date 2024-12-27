@@ -3,12 +3,13 @@ const db = require("../config/database");
 class Budget {
  static async create(title, totalAmount, duration, userId) {
 
-    if (typeof title !== 'string' || typeof totalAmount !== 'number' || typeof duration !== 'string') {
-      throw new Error('Invalid input types');
+    if (typeof title !== 'string' || typeof totalAmount !== 'number' || typeof duration !== 'string' ||
+      typeof userId !== 'number') {
+      throw new Error('Invalid Input Types');
     }
     const query = {
-      text: `INSERT INTO budgets (title, total_amount, duration) VALUES ($1, $2, $3) RETURNING *`,
-      values: [title, totalAmount, duration],
+      text: `INSERT INTO budgets (title, total_amount, duration, user_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+      values: [title, totalAmount, duration,userId],
     };
     try {
       const result = await db.query(query);
