@@ -10,7 +10,7 @@ const budgetController = {
         return res.status(400).json({ 
           status: "Bad Request",
           statusCode: 400,
-          error: 'Please provide all required fields' });
+          error: 'Please Input All Required Fields' });
       }
 
       const numerictotal_amount = parseFloat(total_amount);
@@ -19,6 +19,14 @@ const budgetController = {
         status: "Bad Request",
         statusCode: 400,
         error: 'Invalid total_amount: Must Be A Number' });
+    }
+
+    if (!req.user || !req.user.id) {
+      return res.status(403).json({
+        status: "Forbidden",
+        statusCode: 403,
+        error: 'Unauthorized Request',
+      });
     }
   
       const budget = await Budget.create(title, numerictotal_amount, duration, req.user.id);
@@ -45,7 +53,7 @@ const budgetController = {
         statusCode: 200,
         budgets});
     } catch (err) {
-      console.error("Error in getAllBudgets:", err); // Add specific error context
+      console.error("Error in getAllBudgets:", err); 
     res.status(500).json({
       status: "Internal Server Error",
       statusCode: 500,
