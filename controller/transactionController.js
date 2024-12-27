@@ -12,7 +12,7 @@ const createTransaction = async (req, res) => {
       return res.status(400).json({
         status: "Bad Request",
         statusCode: 400,
-        error: "Narration is required to create a transaction",
+        error: "Please Input Narration To Create A Transaction",
       });
     }
 
@@ -69,7 +69,7 @@ const getAllTransactions = async (req, res) => {
     res.status(500).json({
       status: "Internal Server Error",
       statusCode: 500,
-      message: `Error fetching transactions", ${error.message}`,
+      message: `Error Fetching Transactions", ${error.message}`,
     });
   }
 };
@@ -146,7 +146,7 @@ const updateTransaction = async (req, res) => {
     res.status(200).json({
       status: "Success OK",
       statusCode: 200,
-      message: `Tranaction With Id ${id} Updated Successfully`,
+      message: `Transaction With Id ${id} Updated Successfully`,
       transaction,
     });
   } catch (error) {
