@@ -1,4 +1,6 @@
-# Personal Finance Manager API (A fullstack webapp that for users to manage their finances effectively)
+# Budgetly
+
+Personal Finance Manager API (A fullstack webapp for users to manage their budgets and track finances effectively)
 
 ## Overview
 
@@ -10,14 +12,12 @@ The application includes features for creating budgets, tracking transactions, m
 - Budget creation, updating, and deletion
 - Transaction tracking and categorization
 - Financial summaries and trend analysis
-- Report generation (PDF/CSV)
 
 ## Technologies
 
 - Node.js
 - Express.js
 - PostgreSQL
-- Sequelize ORM
 - JWT for Authentication
 
 ## Setup and Installation
@@ -30,3 +30,11 @@ The application includes features for creating budgets, tracking transactions, m
 ## Web URL
 
 `https://budgetly-psi.vercel.app/`
+
+## Postman Documentation
+
+`https://documenter.getpostman.com/view/38698911/2sAYJ1mi48`
+
+## Entity Relationship Diagram
+
+`https://dbdiagram.io/d/Budetly-Personal-Finance-Manager-676f2b225406798ef7caaf45`
