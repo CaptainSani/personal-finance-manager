@@ -4,20 +4,26 @@ const bcrypt = require("bcryptjs");
 
 const User = {
   async createUser(username, email, password) {
-    //check if a user already exists
-    const existingUserQuery = {
-      text: `SELECT * FROM users WHERE username = $1 OR email = $2`,
-      values: [username, email],
+    //check if a username or email already exists
+    const existingUsernameQuery = {
+      text: `SELECT * FROM users WHERE username = $1`,
+      values: [username],
     };
-    const existingUserResult = await pool.query(existingUserQuery);
+    const existingUsernameResult = await pool.query(existingUsernameQuery);
 
-    
-
-    if (existingUserResult.rows.length > 0) {
-      throw new Error("User already exists, Please login");
+    if (existingUsernameResult.rows.length > 0) {
+      throw new Error("Username Already Exists, Please Choose Another One");
     }
 
-  
+    const existingEmailQuery = {
+      text: `SELECT * FROM users WHERE email = $1`,
+      values: [email],
+    };
+    const existingEmailResult = await pool.query(existingEmailQuery);
+
+    if (existingEmailResult.rows.length > 0) {
+      throw new Error("Email Already Exists, Please Login if You Already Have An Account Or Kindly Use Another Email");
+    }
 
     //create a new user
     const hashedPassword = await bcrypt.hash(password, 10);
