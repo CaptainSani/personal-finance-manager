@@ -9,7 +9,7 @@ const userController = {
           if (!email) {
             return res.status(400).json({ 
               status: "Bad Request",
-              statusCode: "400",
+              statusCode: 400,
               error: 'Please Input Valid Email'
             });
           }
@@ -19,14 +19,14 @@ const userController = {
           if (!user) {
             return res.status(404).json({ 
               status: "Not Found",
-              statusCode: "404",
+              statusCode: 404,
               error: 'No Email Found'
             });
           }
       
           res.status(200).json({ 
             status: "Success OK",
-            statusCode: "200",
+            statusCode: 200,
             message: "Username Retrieved Successfully",
             user: {
               username: user.username,
@@ -37,7 +37,7 @@ const userController = {
           console.error("Error Fetching User By Email:", error);
           res.status(500).json({ 
             status: "Internal Server Error",
-            statusCode: "500",
+            statusCode: 500,
             error: 'Failed To Retrieve User Details'
           });
         }
@@ -51,7 +51,7 @@ const userController = {
           if (!id) {
             return res.status(400).json({ 
               status: "Bad Request",
-              statusCode: "400",
+              statusCode: 400,
               error: 'Please Input Valid User Id'
             });
           }
@@ -63,15 +63,15 @@ const userController = {
           if (!id) {
             return res.status(404).json({ 
               status: "Not Found",
-              statusCode: "404",
+              statusCode: 404,
               error: 'No Id found'
             });
           }
       
           
           res.status(200).json({ 
-            status: "Success",
-            statusCode: "200 OK",
+            status: "Success OK",
+            statusCode: 200,
             message: "Username And Email Retrieved Successfully",
             user: {
               username: user.username,
@@ -84,7 +84,7 @@ const userController = {
           console.error("Error Fetching User By Id:", error);
           res.status(500).json({ 
             status: "Internal Server Error",
-            statusCode: "500",
+            statusCode: 500,
             error: 'Failed To Retrieve User Details'
           });
         }
@@ -98,7 +98,7 @@ const userController = {
           if (!id || !newUsername) {
             return res.status(400).json({
               status: "Bad Request",
-              statusCode: "400",
+              statusCode: 400,
               error: 'Please Input Valid User Id and Username'
             });
           }
@@ -106,8 +106,8 @@ const userController = {
           const user = await User.updateUsername(id, newUsername);
     
           res.status(200).json({
-            status: "Success",
-            statusCode: "200 OK",
+            status: "Success OK",
+            statusCode: 200,
             message: "Username Updated Successfully",
             user: {
               username: user.username,
@@ -118,7 +118,7 @@ const userController = {
           console.error("Error Updating Username:", error);
           res.status(500).json({
             status: "Internal Server Error",
-            statusCode: "500",
+            statusCode: 500,
             error: 'Failed To Update Username'
           });
         }
@@ -132,7 +132,7 @@ const userController = {
           if (!id || !newEmail) {
             return res.status(400).json({
               status: "Bad Request",
-              statusCode: "400",
+              statusCode: 400,
               error: 'Please Input Valid User Id and Email'
             });
           }
@@ -140,8 +140,8 @@ const userController = {
           const user = await User.updateEmail(id, newEmail);
     
           res.status(200).json({
-            status: "Success",
-            statusCode: "200 OK",
+            status: "Success OK",
+            statusCode: 200,
             message: "Email Updated Successfully",
             user: {
               email: user.email,
@@ -152,7 +152,7 @@ const userController = {
           console.error("Error Updating Email:", error);
           res.status(500).json({
             status: "Internal Server Error",
-            statusCode: "500",
+            statusCode: 500,
             error: 'Failed To Update Email'
           });
         }
@@ -166,7 +166,7 @@ const userController = {
           if (!id || !newPassword) {
             return res.status(400).json({
               status: "Bad Request",
-              statusCode: "400",
+              statusCode: 400,
               error: 'Please Input Valid User Id and Password'
             });
           }
@@ -174,8 +174,8 @@ const userController = {
           const user = await User.updatePassword(id, newPassword);
     
           res.status(200).json({
-            status: "Success",
-            statusCode: "200 OK",
+            status: "Success OK",
+            statusCode: 200,
             message: "Password Updated Successfully",
           });
     
@@ -183,7 +183,7 @@ const userController = {
           console.error("Error Updating Password:", error);
           res.status(500).json({
             status: "Internal Server Error",
-            statusCode: "500",
+            statusCode: 500,
             error: 'Failed To Update Password'
           });
         }
