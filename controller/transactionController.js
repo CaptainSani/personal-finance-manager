@@ -11,7 +11,7 @@ const createTransaction = async (req, res) => {
     if (!narration) {
       return res.status(400).json({
         status: "Bad Request",
-        statusCode: "400",
+        statusCode: 400,
         error: "Narration is required to create a transaction",
       });
     }
@@ -22,7 +22,7 @@ const createTransaction = async (req, res) => {
     if (isNaN(numericAmount)) {
       return res.status(400).json({
         status: "Bad Request",
-        statusCode: "400",
+        statusCode: 400,
         error: "Invalid Amount: Must Be A Number",
       });
     }
@@ -34,22 +34,23 @@ const createTransaction = async (req, res) => {
       budget_id,
       user_id,
     });
-    res.status(201).json({
+    res.status(200).json({
       status: "Success OK",
-      statusCode: "201",
+      statusCode: 200,
+      message: "Transaction Created Succesfully",
       transaction,
     });
   } catch (error) {
     console.error("Error in createTransaction:", error);
     res.status(500).json({
       status: "Internal Server Error",
-      statusCode: "500",
+      statusCode: 500,
       message: `Error Creating Transaction: ${error.message}`,
     });
   }
 };
 
-// Get all transactions with optional filters
+
 const getAllTransactions = async (req, res) => {
   try {
     const user_id = req.user.id;
@@ -60,20 +61,20 @@ const getAllTransactions = async (req, res) => {
     );
     res.status(200).json({
       status: "Success OK",
-      statusCode: "200",
+      statusCode: 200,
       transactions,
     });
   } catch (error) {
     console.error("Error in getAllTransactions:", error);
     res.status(500).json({
       status: "Internal Server Error",
-      statusCode: "500",
+      statusCode: 500,
       message: `Error fetching transactions", ${error.message}`,
     });
   }
 };
 
-// Get a transaction by ID
+
 const getTransactionById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -82,26 +83,26 @@ const getTransactionById = async (req, res) => {
     if (!transaction) {
       return res.status(404).json({
         status: "Not Found",
-        statusCode: "404",
+        statusCode: 404,
         message: `Transaction With Id ${id} Not Found`,
       });
     }
     res.status(200).json({
       status: "Success OK",
-      statusCode: "200",
+      statusCode: 200,
       transaction,
     });
   } catch (error) {
     console.error("Error in getTransactionById:", error);
     res.status(500).json({
       status: "Internal Server Error",
-      statusCode: "500",
+      statusCode: 500,
       message: `Error Fetching Transaction With ID", ${error.message}`,
     });
   }
 };
 
-// Update a transaction
+
 const updateTransaction = async (req, res) => {
   try {
     const { id } = req.params;
@@ -113,7 +114,7 @@ const updateTransaction = async (req, res) => {
       if (isNaN(numericAmount)) {
         return res.status(400).json({
           status: "Bad Request",
-          statusCode: "400",
+          statusCode: 400,
           error: "Invalid Amount: Must Be A Number",
         });
       }
@@ -138,13 +139,13 @@ const updateTransaction = async (req, res) => {
     if (!transaction) {
       return res.status(404).json({
         status: "Not Found",
-        statusCode: "404",
+        statusCode: 404,
         message: `Tranaction With Id ${id} Not Found`,
       });
     }
     res.status(200).json({
       status: "Success OK",
-      statusCode: "200",
+      statusCode: 200,
       message: `Tranaction With Id ${id} Updated Successfully`,
       transaction,
     });
@@ -152,13 +153,13 @@ const updateTransaction = async (req, res) => {
     console.error("Error in updateTransaction:", error);
     res.status(500).json({
       status: "Internal Server Error",
-      statusCode: "500",
+      statusCode: 500,
       message: `Error Updating Transaction", ${error.message}`,
     });
   }
 };
 
-// Delete a transaction
+
 const deleteTransaction = async (req, res) => {
   try {
     const { id } = req.params;
@@ -167,20 +168,20 @@ const deleteTransaction = async (req, res) => {
     if (!transaction) {
       return res.status(404).json({
         satus: "Bad Request",
-        statusCode: "400",
+        statusCode: 400,
         error: `Transaction with ID ${id} Not Found`,
       });
     }
     res.status(200).json({
       status: "Success OK",
-      tatusCode: "200",
+      statusCode: 200,
       message: `Transaction With ID ${id} deleted successfully`,
     });
   } catch (err) {
     console.error("Error in deleteTransaction:", error);
     res.status(500).json({
       status: "Internal Server Error",
-      statusCode: "500",
+      statusCode: 500,
       message: `Error Deleting Transaction: ${err.message}`,
     });
   }
