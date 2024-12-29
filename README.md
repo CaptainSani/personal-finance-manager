@@ -6,6 +6,45 @@ Personal Finance Manager API (A fullstack webapp for users to manage their budge
 
 The application includes features for creating budgets, tracking transactions, managing financial goals, categorizing expenses, and generating financial insight
 
+## Project Structure
+
+Personal-Finance-Manager/
+│
+├── controllers/
+│   ├── authController.js
+│   ├── budgetController.js
+│   ├── transactionController.js
+│   ├── insightController.js
+│
+├── models/
+│   ├── user.js
+│   ├── budget.js
+│   ├── transaction.js
+│
+├── routes/
+│   ├── authRoutes.js
+│   ├── budgetRoutes.js
+│   ├── transactionRoutes.js
+│   ├── insightRoutes.js
+│
+├── middleware/
+│   ├── authMiddleware.js
+│
+├── config/
+│   ├── database.js
+│
+├── utils/
+│   ├── autoCategorization.js
+│
+├── .env
+├── .gitignore
+├── AUTHORS
+├── LICENSE
+├── app.js
+├── package-lock.json
+├── package.json
+└── README.md
+
 ## Features
 
 - User authentication and management
