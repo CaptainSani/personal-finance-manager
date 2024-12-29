@@ -80,4 +80,4 @@ Personal-Finance-Manager/
 
 [Personal Finance Manager ERD](https://dbdiagram.io/d/Budgetly-Personal-Finance-Manager-676f2b225406798ef7caaf45)
 
-![Personal Finance Manager ERD](https://github.com/CaptainSani/personal-finance-manage/blob/main/Budgetly.png?raw=true)
+![Personal Finance Manager ERD](https://github.com/CaptainSani/personal-finance-manager/blob/main/Budgetly.png?raw=true)
