@@ -8,6 +8,7 @@ The application includes features for creating budgets, tracking transactions, m
 
 ## Project Structure
 
+```md
 Personal-Finance-Manager/
 │
 ├── controllers/
@@ -35,7 +36,7 @@ Personal-Finance-Manager/
 │
 ├── utils/
 │   ├── autoCategorization.js
-│
+|
 ├── .env
 ├── .gitignore
 ├── AUTHORS
@@ -44,6 +45,7 @@ Personal-Finance-Manager/
 ├── package-lock.json
 ├── package.json
 └── README.md
+```
 
 ## Features
 
@@ -68,12 +70,14 @@ Personal-Finance-Manager/
 
 ## Web URL
 
-`https://budgetly-psi.vercel.app/`
+[budgetly](https://budgetly-psi.vercel.app/)
 
 ## Postman Documentation
 
-`https://documenter.getpostman.com/view/38698911/2sAYJ1mi48`
+[Postman Endpoints Documnetation](https://documenter.getpostman.com/view/38698911/2sAYJ1mi48)
 
 ## Entity Relationship Diagram
 
-`https://dbdiagram.io/d/Budetly-Personal-Finance-Manager-676f2b225406798ef7caaf45`
+[Personal Finance Manager ERD](https://dbdiagram.io/d/Budgetly-Personal-Finance-Manager-676f2b225406798ef7caaf45)
+
+![Personal Finance Manager ERD](https://github.com/CaptainSani/personal-finance-manage/blob/main/Budgetly.png?raw=true)
