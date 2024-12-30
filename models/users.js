@@ -79,33 +79,48 @@ const User = {
     return result.rows[0];
   },
 
-  async updateUsername(id, newUsername) {
+
+  async updateUserDetails(id, username, password) {
     const query = {
-      text: `UPDATE users SET username = $1 WHERE id = $2 RETURNING *`,
-      values: [newUsername, id],
+      text: `UPDATE users SET username = $1, password = $2 WHERE id = $3 RETURNING *`,
+      value: [id, username, password]
     };
-    const result = await pool.query(query);
-    return result.rows[0];
+    try{
+      const result = await pool.query(query);
+      return result.rows[0];
+    }catch(err){
+      console.error(err);
+      throw err;
+    }
   },
 
-  async updateEmail(id, newEmail) {
-    const query = {
-      text: `UPDATE users SET email = $1 WHERE id = $2 RETURNING *`,
-      values: [newEmail, id],
-    };
-    const result = await pool.query(query);
-    return result.rows[0];
-  },
+  // async updateUsername(id, newUsername) {
+  //   const query = {
+  //     text: `UPDATE users SET username = $1 WHERE id = $2 RETURNING *`,
+  //     values: [newUsername, id],
+  //   };
+  //   const result = await pool.query(query);
+  //   return result.rows[0];
+  // },
 
-  async updatePassword(id, newPassword) {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    const query = {
-      text: `UPDATE users SET password = $1 WHERE id = $2 RETURNING *`,
-      values: [hashedPassword, id],
-    };
-    const result = await pool.query(query);
-    return result.rows[0];
-  },
+  // async updateEmail(id, newEmail) {
+  //   const query = {
+  //     text: `UPDATE users SET email = $1 WHERE id = $2 RETURNING *`,
+  //     values: [newEmail, id],
+  //   };
+  //   const result = await pool.query(query);
+  //   return result.rows[0];
+  // },
+
+  // async updatePassword(id, newPassword) {
+  //   const hashedPassword = await bcrypt.hash(newPassword, 10);
+  //   const query = {
+  //     text: `UPDATE users SET password = $1 WHERE id = $2 RETURNING *`,
+  //     values: [hashedPassword, id],
+  //   };
+  //   const result = await pool.query(query);
+  //   return result.rows[0];
+  // },
 };
 
 module.exports = User;
