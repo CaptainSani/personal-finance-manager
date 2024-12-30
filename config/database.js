@@ -38,20 +38,20 @@ pool.query(
   }
 );
 
-pool.query(
-  `CREATE TABLE IF NOT EXISTS categories (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  ); `,
-  (err, res) => {
-    if (err) {
-      console.error("Error creating categories table:", err);
-    } else {
-      console.log("Categories Table created successfully");
-    }
-  }
-);
+// pool.query(
+//   `CREATE TABLE IF NOT EXISTS categories (
+//     id SERIAL PRIMARY KEY,
+//     name VARCHAR(50) NOT NULL,
+//     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   ); `,
+//   (err, res) => {
+//     if (err) {
+//       console.error("Error creating categories table:", err);
+//     } else {
+//       console.log("Categories Table created successfully");
+//     }
+//   }
+// );
 
 pool.query(
     `CREATE TABLE IF NOT EXISTS budgets (
@@ -78,10 +78,10 @@ pool.query(
       amount DECIMAL(10, 2) NOT NULL,
       category VARCHAR(20) NOT NULL,
       narration VARCHAR(200) NOT NULL,
-      // budget_id INTEGER,
+      -- budget_id INTEGER,
       user_id INTEGER NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      // FOREIGN KEY (budget_id) REFERENCES budgets(id),
+      -- FOREIGN KEY (budget_id) REFERENCES budgets(id),
       FOREIGN KEY (user_id) REFERENCES users(id)
     ); `,
     (err, res) => {
@@ -93,23 +93,23 @@ pool.query(
     }
   );
   
-  pool.query(
-    `CREATE TABLE IF NOT EXISTS insights (
-      id SERIAL PRIMARY KEY,
-      user_id INTEGER NOT NULL,
-      total_income DECIMAL(10, 2) NOT NULL,
-      total_expenses DECIMAL(10, 2) NOT NULL,
-      remaining_budget DECIMAL(10, 2) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    ); `,
-    (err, res) => {
-      if (err) {
-        console.error("Error creating insights table:", err);
-      } else {
-        console.log("Insights Table created successfully");
-      }
-    }
-  );
+  // pool.query(
+  //   `CREATE TABLE IF NOT EXISTS insights (
+  //     id SERIAL PRIMARY KEY,
+  //     user_id INTEGER NOT NULL,
+  //     total_income DECIMAL(10, 2) NOT NULL,
+  //     total_expenses DECIMAL(10, 2) NOT NULL,
+  //     remaining_budget DECIMAL(10, 2) NOT NULL,
+  //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  //     FOREIGN KEY (user_id) REFERENCES users(id)
+  //   ); `,
+  //   (err, res) => {
+  //     if (err) {
+  //       console.error("Error creating insights table:", err);
+  //     } else {
+  //       console.log("Insights Table created successfully");
+  //     }
+  //   }
+  // );
 
 module.exports = pool;
