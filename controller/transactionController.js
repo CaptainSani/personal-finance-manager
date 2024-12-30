@@ -84,7 +84,7 @@ const getTransactionById = async (req, res) => {
       return res.status(404).json({
         status: "Not Found",
         statusCode: 404,
-        message: `Transaction With Id ${id} Not Found`,
+        message: `Transaction Not Found`,
       });
     }
     res.status(200).json({
@@ -107,7 +107,7 @@ const updateTransaction = async (req, res) => {
   try {
     const { id } = req.params;
     const user_id = req.user.id;
-    const { amount, narration, budget_id } = req.body;
+    const { amount, narration} = req.body;
 
     if (amount !== undefined) {
       const numericAmount = parseFloat(amount);
@@ -123,7 +123,6 @@ const updateTransaction = async (req, res) => {
     const updatedData = {
       amount,
       narration,
-      budget_id,
     };
 
     if (narration) {
@@ -140,13 +139,13 @@ const updateTransaction = async (req, res) => {
       return res.status(404).json({
         status: "Not Found",
         statusCode: 404,
-        message: `Tranaction With Id ${id} Not Found`,
+        message: `Transaction Not Found`,
       });
     }
     res.status(200).json({
       status: "Success OK",
       statusCode: 200,
-      message: `Transaction With Id ${id} Updated Successfully`,
+      message: `Transaction Updated Successfully`,
       transaction,
     });
   } catch (error) {
@@ -169,13 +168,13 @@ const deleteTransaction = async (req, res) => {
       return res.status(404).json({
         satus: "Bad Request",
         statusCode: 400,
-        error: `Transaction with ID ${id} Not Found`,
+        error: `Transaction Not Found`,
       });
     }
     res.status(200).json({
       status: "Success OK",
       statusCode: 200,
-      message: `Transaction With ID ${id} deleted successfully`,
+      message: `Transaction Deleted Successfully`,
     });
   } catch (err) {
     console.error("Error in deleteTransaction:", error);
