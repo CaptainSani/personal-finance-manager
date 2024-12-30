@@ -82,8 +82,8 @@ const User = {
   async updateUserDetails(id, newUsername, newPassword){
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     const query ={
-      text: `UPADTE users SET username = $1, password = $2, WHERE id = $3 RETURTING *`,
-      values: [id, newUsername, hashedPassword]
+      text: `UPDATE users SET username = $1, password = $2 WHERE id = $3 RETURNING *`,
+      values: [newUsername, hashedPassword, id]
     };
     const result = await pool.query(query);
     return result.rows[0];
