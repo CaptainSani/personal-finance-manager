@@ -68,7 +68,7 @@ const budgetController = {
         res.status(404).json({ 
           status: "Not Found",
           statusCode: 404,
-          message: `Budget With Id ${req.params.id} Not Found` });
+          message: `Budget Not Found` });
       } else {
         res.status(200).json({
           status: "Success OK",
@@ -109,12 +109,12 @@ const budgetController = {
         res.status(404).json({ 
           status: "Not Found",
             statusCode: 404,
-          message: `Budget With Id ${req.params.id} not found` });
+          message: `Budget not found` });
       } else {
         res.status(200).json({
           status: "Success OK",
           statusCode: 200,
-          message: `Budget With Id ${req.params.id} Updated Succesfully`,
+          message: `Budget Updated Succesfully`,
           budget});
       }
     } catch (err) {
@@ -134,12 +134,12 @@ const budgetController = {
         res.status(404).json({ 
           status: "Bad Request",
           statusCode: 404,
-          error: `Budget With Id ${req.params.id} Not found` });
+          error: `Budget Not found` });
       } else {
         res.status(200).json({ 
           status: "Success OK",
           statusCode: 200,
-          message: `Budget With Id ${req.params.id} deleted successfully` });
+          message: `Budget Deleted Successfully` });
       }
     } catch (err) {
       console.error("Error in deleteBudget:", err);
