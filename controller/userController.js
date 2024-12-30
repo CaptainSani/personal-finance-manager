@@ -95,7 +95,7 @@ const userController = {
         });
       }
       const user = await User.updateUserDetails(
-        req.params.id,
+        id,
         username,
         password
       );
@@ -111,7 +111,10 @@ const userController = {
           status: "Success OK",
           statusCode: 200,
           message: `User Updated Succesfully`,
-          budget,
+          user:{
+            id: user.id,
+            username: user.username,
+          }
         });
       }
     } catch (err) {
