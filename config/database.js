@@ -78,10 +78,10 @@ pool.query(
       amount DECIMAL(10, 2) NOT NULL,
       category VARCHAR(20) NOT NULL,
       narration VARCHAR(200) NOT NULL,
-      budget_id INTEGER,
+      // budget_id INTEGER,
       user_id INTEGER NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (budget_id) REFERENCES budgets(id),
+      // FOREIGN KEY (budget_id) REFERENCES budgets(id),
       FOREIGN KEY (user_id) REFERENCES users(id)
     ); `,
     (err, res) => {
