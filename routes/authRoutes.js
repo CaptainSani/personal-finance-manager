@@ -10,7 +10,5 @@ router.post('/login', authController.login);
 router.get('/user/:email', authenticate, userController.getUserByEmail);
 router.get('/user/id/:id', authenticate, userController.getUserById);
 router.patch('/users/update', authenticate, userController.updateUser);
-// router.patch('/users/email/:id', authenticate, userController.updateEmail);
-// router.patch('/users/password/:id', authenticate, userController.updatePassword);
 
 module.exports = router;
