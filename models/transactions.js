@@ -50,10 +50,9 @@ const updateTransaction = async (id, user_id, updatedData) => {
   const { amount, narration, category } = updatedData;
   const query = `
       UPDATE transactions
-      SET amount = $1, narration = $2, category = $3,
+      SET amount = $1, narration = $2, category = $3
       WHERE id = $4 AND user_id = $5
-      RETURNING *;
-    `;
+      RETURNING *`;
   const values = [amount, narration, category, id, user_id];
   const result = await pool.query(query, values);
   return result.rows[0];
