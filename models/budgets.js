@@ -48,10 +48,10 @@ class Budget {
     }
   }
 
-  static async update(id, title, totalAmount, duration, userId) {
+  static async update(id, title, total_amount, duration, userId) {
     const query = {
       text: `UPDATE budgets SET title = $1, total_amount = $2, duration = $3 WHERE id = $4 AND user_id = $5 RETURNING *`,
-      values: [title, totalAmount, duration, id, userId],
+      values: [title, total_amount, duration, id, userId],
     };
     try {
       const result = await db.query(query);

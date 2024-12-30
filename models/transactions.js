@@ -47,14 +47,14 @@ const getTransactionById = async (id, user_id) => {
 
 // Update a transaction
 const updateTransaction = async (id, user_id, updatedData) => {
-  const { amount, narration, category, budget_id } = updatedData;
+  const { amount, narration, category } = updatedData;
   const query = `
       UPDATE transactions
-      SET amount = $1, narration = $2, category = $3, budget_id = $4
-      WHERE id = $5 AND user_id = $6
+      SET amount = $1, narration = $2, category = $3,
+      WHERE id = $4 AND user_id = $5
       RETURNING *;
     `;
-  const values = [amount, narration, category, budget_id, id, user_id];
+  const values = [amount, narration, category, id, user_id];
   const result = await pool.query(query, values);
   return result.rows[0];
 };
