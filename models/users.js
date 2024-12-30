@@ -79,29 +79,11 @@ const User = {
     return result.rows[0];
   },
 
-  async updateUsername(id, newUsername) {
-    const query = {
-      text: `UPDATE users SET username = $1 WHERE id = $2 RETURNING *`,
-      values: [newUsername, id],
-    };
-    const result = await pool.query(query);
-    return result.rows[0];
-  },
-
-  async updateEmail(id, newEmail) {
-    const query = {
-      text: `UPDATE users SET email = $1 WHERE id = $2 RETURNING *`,
-      values: [newEmail, id],
-    };
-    const result = await pool.query(query);
-    return result.rows[0];
-  },
-
-  async updatePassword(id, newPassword) {
+  async updateUserDetails(id, newUsername, newPassword){
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    const query = {
-      text: `UPDATE users SET password = $1 WHERE id = $2 RETURNING *`,
-      values: [hashedPassword, id],
+    const query ={
+      text: `UPADTE users SET username = $1, password = $2, WHERE id = $3`,
+      vale: [id, newUsername, hashedPassword]
     };
     const result = await pool.query(query);
     return result.rows[0];

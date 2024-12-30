@@ -9,8 +9,6 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/user/:email', authenticate, userController.getUserByEmail);
 router.get('/user/id/:id', authenticate, userController.getUserById);
-router.patch('/user/username/:id', authenticate, userController.updateUsername);
-router.patch('/user/email/:id', authenticate, userController.updateEmail);
-router.patch('/user/password/:id', authenticate, userController.updatePassword);
+router.patch('/user/users/update/:id', authenticate, userController.updateUserDetails);
 
 module.exports = router;
