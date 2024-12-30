@@ -60,7 +60,7 @@ const authController = {
           res.json({ 
             status: "Success OK",
             statusCode: 200,
-            message: `${email} Logged-In Successfully` , token });
+            message: `User Logged-In Successfully` , token });
 
         } catch (error) {
           console.error(error);
