@@ -2,13 +2,13 @@ const pool = require("../config/database");
 
 // Insert a new transaction
 const createTransaction = async (transaction) => {
-  const { amount, narration, category, budget_id, user_id } = transaction;
+  const { amount, narration, category, transaction_type, budget_id, user_id } = transaction;
   const query = `
-      INSERT INTO transactions (amount, narration, category, budget_id, user_id)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO transactions (amount, narration, category, transaction_type, budget_id, user_id)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-  const values = [amount, narration, category, budget_id, user_id];
+  const values = [amount, narration, category, transaction_type, budget_id, user_id];
   const result = await pool.query(query, values);
   return result.rows[0];
 };
@@ -46,16 +46,35 @@ const getTransactionById = async (id, user_id) => {
 };
 
 // Update a transaction
-const updateTransaction = async (id, user_id, updatedData) => {
-  const { amount, narration, category } = updatedData;
+const updateTransaction = async (id, updatedData, user_id) => {
+  if (Object.keys(updatedData).length === 0) {
+    throw new Error("No fields provided to update");
+  }
+
+  const setClauses = [];
+  const values = [];
+  let index = 1;
+
+  for (const [key, value] of Object.entries(updatedData)) {
+    setClauses.push(`${key} = $${index}`);
+    values.push(value);
+    index++;
+  }
+
+  values.push(id, user_id);
   const query = `
-      UPDATE transactions
-      SET amount = $1, narration = $2, category = $3
-      WHERE id = $4 AND user_id = $5
-      RETURNING *`;
-  const values = [amount, narration, category, id, user_id];
-  const result = await pool.query(query, values);
-  return result.rows[0];
+    UPDATE transactions
+    SET ${setClauses.join(", ")}
+    WHERE id = $${index} AND user_id = $${index + 1}
+    RETURNING *;
+  `;
+  try {
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error in updateTransaction query:", error);
+    throw error;
+  }
 };
 
 // Delete a transaction
