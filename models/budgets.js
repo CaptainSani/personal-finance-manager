@@ -75,6 +75,20 @@ class Budget {
       throw err;
     }
   }
+
+  static async findById(id) {
+  const query = {
+    text: `SELECT * FROM budgets WHERE id = $1`,
+    values: [id],
+  };
+  try {
+    const result = await db.query(query);
+    return result.rows[0];
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+  }
 }
 
 module.exports = Budget;

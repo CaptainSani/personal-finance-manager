@@ -88,13 +88,7 @@ const budgetController = {
     try {
       const { title, total_amount, duration } = req.body;
     
-      // if (!title || !total_amount || !duration) {
-      //   return res.status(400).json({ 
-      //     status: "Bad Request",
-      //     statusCode: 400,
-      //     error: "Please Input All Required Fields" });
-      // }
-  
+    
       const numerictotal_amount = parseFloat(total_amount);
       if (isNaN(numerictotal_amount)) {
         return res.status(400).json({ 

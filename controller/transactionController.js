@@ -1,11 +1,13 @@
 const transactionModel = require("../models/transactions");
+const budgetModel = require("../models/budgets");
+
 const { autoCategorize } = require("../utils/autoCategorization");
 
 
 // Create a new transaction
 const createTransaction = async (req, res) => {
   try {
-    const { amount, narration, budget_id } = req.body;
+    const { amount, narration, transaction_type, budget_id } = req.body;
     const user_id = req.user.id;
 
     if (!narration) {
@@ -14,6 +16,17 @@ const createTransaction = async (req, res) => {
         statusCode: 400,
         error: "Please Input Narration To Create A Transaction",
       });
+    }
+
+    if (budget_id) {
+      const budgetExists = await budgetModel.findById(budget_id);
+      if (!budgetExists) {
+        return res.status(400).json({
+          status: "Bad Request",
+          statusCode: 400,
+          error: "Invalid Budget ID: Please Input A Valid Budget ID",
+        });
+      }
     }
 
     const category = autoCategorize(narration);
@@ -31,6 +44,7 @@ const createTransaction = async (req, res) => {
       amount: numericAmount,
       narration,
       category,
+      transaction_type,
       budget_id,
       user_id,
     });
@@ -107,7 +121,9 @@ const updateTransaction = async (req, res) => {
   try {
     const { id } = req.params;
     const user_id = req.user.id;
-    const { amount, narration} = req.body;
+    const { amount, narration, transaction_type, budget_id } = req.body;
+
+    const updatedData = {};
 
     if (amount !== undefined) {
       const numericAmount = parseFloat(amount);
@@ -115,26 +131,43 @@ const updateTransaction = async (req, res) => {
         return res.status(400).json({
           status: "Bad Request",
           statusCode: 400,
-          error: "Invalid Amount: Must Be A Number",
+          error: "Invalid Amount: Must be a number",
         });
       }
+      updatedData.amount = numericAmount;
     }
 
-    const updatedData = {
-      amount,
-      narration,
-    };
-
     if (narration) {
+      updatedData.narration = narration;
       updatedData.category = autoCategorize(narration);
+    }
+
+    if (budget_id !== undefined) {
+      const budgetExists = await budgetModel.findById(budget_id);
+      if (!budgetExists) {
+        return res.status(400).json({
+          status: "Bad Request",
+          statusCode: 400,
+          error: "Invalid Budget ID: Please Input A Valid Budget ID",
+        });
+      }
+      updatedData.budget_id = budget_id;
+    }
+
+    if (Object.keys(updatedData).length === 0) {
+      return res.status(400).json({
+        status: "Bad Request",
+        statusCode: 400,
+        error: "No Fields Provided To Update",
+      });
     }
 
     const transaction = await transactionModel.updateTransaction(
       id,
-      user_id,
-      updatedData
+      updatedData,
+      user_id
     );
-    
+
     if (!transaction) {
       return res.status(404).json({
         status: "Not Found",
@@ -142,6 +175,7 @@ const updateTransaction = async (req, res) => {
         message: `Transaction Not Found`,
       });
     }
+
     res.status(200).json({
       status: "Success OK",
       statusCode: 200,
@@ -153,7 +187,7 @@ const updateTransaction = async (req, res) => {
     res.status(500).json({
       status: "Internal Server Error",
       statusCode: 500,
-      message: `Error Updating Transaction", ${error.message}`,
+      message: `Error Updating Transaction: ${error.message}`,
     });
   }
 };

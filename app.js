@@ -7,7 +7,7 @@ const insightRoutes = require("./routes/insightRoutes");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-const port = 3000;
+const PORT = process.env.PORT;
 
 dotenv.config();
 
@@ -22,8 +22,8 @@ app.use("/api", transactionRoutes);
 
 app.use("/api", insightRoutes);
 
-app.listen(port, async () => {
-  console.log(`Server running on port ${port}`);
+app.listen(PORT, async () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
 
 module.exports = app;
