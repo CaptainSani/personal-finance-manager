@@ -9,7 +9,7 @@ class Budget {
     }
     const query = {
       text: `INSERT INTO budgets (title, total_amount, duration, user_id) VALUES ($1, $2, $3, $4) RETURNING *`,
-      values: [title, totalAmount, duration,userId],
+      values: [title, totalAmount, duration, userId],
     };
     try {
       const result = await db.query(query);
@@ -48,20 +48,36 @@ class Budget {
     }
   }
 
-  static async update(id, title, total_amount, duration, userId) {
+  static async update(id, updatedData, userId) {
+    const fields = [];
+    const values = [];
+    let index = 1;
+  
+    for (const [key, value] of Object.entries(updatedData)) {
+      fields.push(`${key} = $${index}`);
+      values.push(value);
+      index++;
+    }
+  
+    values.push(id, userId);
+  
     const query = {
-      text: `UPDATE budgets SET title = $1, total_amount = $2, duration = $3 WHERE id = $4 AND user_id = $5 RETURNING *`,
-      values: [title, total_amount, duration, id, userId],
+      text: `UPDATE budgets 
+      SET ${fields.join(", ")} 
+      WHERE id = $${index} AND user_id = $${index + 1}
+      RETURNING *`,
+      values,
     };
+  
     try {
       const result = await db.query(query);
       return result.rows[0];
     } catch (err) {
-      console.error(err);
+      console.error("Error in Budget.update:", err);
       throw err;
     }
   }
-
+  
   static async deleteById(id, userId) {
     const query = {
       text: `DELETE FROM budgets WHERE id = $1 AND user_id = $2 RETURNING *`,

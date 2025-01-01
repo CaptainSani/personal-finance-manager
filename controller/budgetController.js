@@ -87,38 +87,66 @@ const budgetController = {
   async updateBudget(req, res) {
     try {
       const { title, total_amount, duration } = req.body;
-    
-    
-      const numerictotal_amount = parseFloat(total_amount);
-      if (isNaN(numerictotal_amount)) {
-        return res.status(400).json({ 
+
+      const updatedData = { };
+
+      if (total_amount !== undefined) {
+        const numericTotalAmount = parseFloat(total_amount);
+        if (isNaN(numericTotalAmount)) {
+          return res.status(400).json({
+            status: "Bad Request",
+            statusCode: 400,
+            error: "Invalid total_amount Type: Must be a number.",
+          });
+        }
+        updatedData.total_amount = numericTotalAmount;
+      }
+  
+      if (title) {
+        updatedData.title = title;
+      }
+  
+      if (duration) {
+        updatedData.duration = duration;
+        }
+      
+      if (Object.keys(updatedData).length === 0) {
+        return res.status(400).json({
           status: "Bad Request",
           statusCode: 400,
-          error: "Invalid total_amount: Must Be A Number" });
+          error: "No Fields Provided For Update.",
+        });
       }
-
-      const budget = await Budget.update(req.params.id, title, numerictotal_amount, duration, req.user.id);
       
+      const budget = await Budget.update(
+        req.params.id,
+        updatedData,
+        req.user.id
+      );
+  
       if (!budget) {
-        res.status(404).json({ 
+        return res.status(404).json({
           status: "Not Found",
-            statusCode: 404,
-          message: `Budget not found` });
-      } else {
-        res.status(200).json({
-          status: "Success OK",
-          statusCode: 200,
-          message: `Budget Updated Succesfully`,
-          budget});
+          statusCode: 404,
+          message: "Budget not found.",
+        });
       }
+  
+      res.status(200).json({
+        status: "Success OK",
+        statusCode: 200,
+        message: "Budget updated successfully.",
+        budget,
+      });
     } catch (err) {
       console.error("Error in updateBudget:", err);
-      res.status(500).json({ 
-      status: "Internal Server Error",
-      statusCode: 500,
-      message: `Error Updating Budget: ${err.message}` });
+      res.status(500).json({
+        status: "Internal Server Error",
+        statusCode: 500,
+        message: `Error updating budget: ${err.message}`,
+      });
     }
-  },
+  },  
 
   async deleteBudget(req, res) {
     try {
