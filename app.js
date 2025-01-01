@@ -7,9 +7,11 @@ const insightRoutes = require("./routes/insightRoutes");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+dotenv.config();
+
 const PORT = process.env.PORT;
 
-dotenv.config();
+
 
 app.use(express.json());
 app.use(cors());
