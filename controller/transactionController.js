@@ -18,13 +18,21 @@ const createTransaction = async (req, res) => {
       });
     }
 
-    if (budget_id) {
+    if (budget_id !== undefined) {
+      if (!Number.isInteger(Number(budget_id))) {
+        return res.status(400).json({
+          status: "Bad Request",
+          statusCode: 400,
+          error: "Invalid Budget_Id Type: Must Be An Integer Number",
+        });
+      }
+
       const budgetExists = await budgetModel.findById(budget_id);
       if (!budgetExists) {
         return res.status(400).json({
           status: "Bad Request",
           statusCode: 400,
-          error: "Invalid Budget ID: Please Input A Valid Budget ID",
+          error: "Invalid Budget_Id: Please Input A Valid Budget_Id",
         });
       }
     }
@@ -123,7 +131,7 @@ const updateTransaction = async (req, res) => {
     const user_id = req.user.id;
     const { amount, narration, transaction_type, budget_id } = req.body;
 
-    const updatedData = {};
+    const updatedData = { };
 
     if (amount !== undefined) {
       const numericAmount = parseFloat(amount);
@@ -142,13 +150,25 @@ const updateTransaction = async (req, res) => {
       updatedData.category = autoCategorize(narration);
     }
 
+    if (transaction_type) {
+      updatedData.transaction_type = transaction_type;
+    }
+      
     if (budget_id !== undefined) {
+      if (!Number.isInteger(Number(budget_id))) {
+        return res.status(400).json({
+          status: "Bad Request",
+          statusCode: 400,
+          error: "Invalid Budget_Id Type: Must Be An Integer Number",
+        });
+      }
+
       const budgetExists = await budgetModel.findById(budget_id);
       if (!budgetExists) {
         return res.status(400).json({
           status: "Bad Request",
           statusCode: 400,
-          error: "Invalid Budget ID: Please Input A Valid Budget ID",
+          error: "Invalid Budget_Id: Please Input A Valid Budget_Id",
         });
       }
       updatedData.budget_id = budget_id;
@@ -161,7 +181,7 @@ const updateTransaction = async (req, res) => {
         error: "No Fields Provided To Update",
       });
     }
-
+  
     const transaction = await transactionModel.updateTransaction(
       id,
       updatedData,
@@ -191,7 +211,6 @@ const updateTransaction = async (req, res) => {
     });
   }
 };
-
 
 const deleteTransaction = async (req, res) => {
   try {
