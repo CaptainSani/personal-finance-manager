@@ -26,9 +26,11 @@ const userController = {
       res.status(200).json({
         status: "Success OK",
         statusCode: 200,
-        message: "Username Retrieved Successfully",
+        message: "User Details Retrieved Successfully",
         user: {
           username: user.username,
+          email: user.email,
+          password: user.password
         },
       });
     } catch (error) {
