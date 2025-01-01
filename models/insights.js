@@ -2,32 +2,29 @@ const pool = require("../config/database");
 
 const Insights = {
     async generateSummary(userId) {
-      // Query for total income and expenses
 
       const incomeExpenseQuery = {
         text: `
-          SELECT
-            SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS total_income,
-            SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END) AS total_expenses
-          FROM transactions
-          WHERE user_id = $1
-        `,
+         SELECT
+          SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) AS total_income,
+          SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS total_expenses
+        FROM transactions
+        WHERE user_id = $1
+      `,
         values: [userId],
       };
       const incomeExpenseResult = await pool.query(incomeExpenseQuery);
-  
-      // Calculate the remaining budget 
+   
       const remainingBudget = incomeExpenseResult.rows[0].total_income - incomeExpenseResult.rows[0].total_expenses;
 
-      // Query for top spending categories
       const topCategoriesQuery = {
         text: `
-          SELECT category, SUM(ABS(amount)) AS total_spent
-          FROM transactions
-          WHERE amount < 0 AND user_id = $1
-          GROUP BY category
-          ORDER BY total_spent DESC
-          LIMIT 5
+        SELECT category, SUM(amount) AS Total_Amount_Spent
+        FROM transactions
+        WHERE transaction_type = 'expenses' AND user_id = $1
+        GROUP BY category
+        ORDER BY Total_Amount_Spent DESC
+        LIMIT 5
         `,
         values: [userId],
       };
@@ -45,13 +42,13 @@ const Insights = {
       const query = {
         text: `
           SELECT
-            TO_CHAR(created_at, 'YYYY-MM') AS Month,
-            SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS Total_Income,
-            SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END) AS Total_Expenses
-          FROM transactions
-          WHERE user_id = $1
-          GROUP BY Month
-          ORDER BY Month ASC
+          TO_CHAR(created_at, 'YYYY-MM') AS Month,
+          SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) AS Total_Income,
+          SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS Total_Expenses
+        FROM transactions
+        WHERE user_id = $1
+        GROUP BY Month
+        ORDER BY Month ASC
         `,
         values: [userId],
       };
