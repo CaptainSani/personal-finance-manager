@@ -20,7 +20,7 @@ const authenticate = async (req, res, next) => {
     res.status(401).json({
       status:"Unathorized",
       statusCode: 401,
-      error:"Authentication Denied: Invalid Token Inserted."});
+      error:"Authentication Error: Expired Token, Please Login Again."});
   }
 };
 
