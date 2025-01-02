@@ -7,7 +7,7 @@ const categories = {
   dining: ['restaurant', 'dinner', 'breakfast', 'lunch', 'coffee', 'café', 'bar', 'fast food', 'snack', 'takeaway'],
   health: ['doctor', 'hospital', 'pharmacy', 'medication', 'prescription', 'therapy', 'testing', 'wellness', 'clinic'],
   fitness: ['gym', 'yoga', 'trainer', 'exercise', 'weights', 'running', 'cycling', 'pilates'],
-  education: ['tuition', 'school', 'college', 'books', 'course', 'certificate', 'exam', 'training', 'learning'],
+  education: ['tuition', 'school', 'college', 'books', 'course', 'certificate', 'exam', 'training', 'learning', 'fees', 'school fees'],
   technology: ['laptop', 'phone', 'tablet', 'smartwatch', 'repair', 'software', 'hardware', 'accessories'],
   travel: ['flight', 'hotel', 'visa', 'resort', 'vacation', 'Airbnb', 'road trip', 'booking'],
   family: ['children', 'spouse', 'partner', 'baby', 'toys', 'nanny', 'anniversary', 'wedding', 'family'],
