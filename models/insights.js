@@ -2,7 +2,6 @@ const pool = require("../config/database");
 
 const Insights = {
   async generateSummary(userId) {
-    // Query to calculate income, expenses, remaining budgets, and top spending categories
     const incomeExpenseBudgetQuery = {
       text: `
         WITH income_expenses AS (
@@ -12,87 +11,83 @@ const Insights = {
           FROM transactions
           WHERE user_id = $1
         ),
-        remaining_budgets AS (
+        total_budgets AS (
+          SELECT
+            SUM(total_amount) AS total_budget
+          FROM budgets
+          WHERE user_id = $1
+        ),
+        total_transactions_expenses AS (
           SELECT 
-            b.id AS budget_id,
-            b.title,
-            b.total_amount,
-            COALESCE(
-              b.total_amount - SUM(
-                CASE WHEN t.transaction_type = 'expenses' THEN ABS(t.amount) ELSE 0 END
-              ), 
-              b.total_amount
-            ) AS remaining_amount
-          FROM budgets b
-          LEFT JOIN transactions t ON t.budget_id = b.id
-          WHERE b.user_id = $1
-          GROUP BY b.id, b.title, b.total_amount
+            SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS total_transactions_expenses
+          FROM transactions
+          WHERE user_id = $1
         ),
         top_categories AS (
           SELECT 
-            category, 
-            SUM(ABS(amount)) AS total_spent
+            category,
+            SUM(amount) AS total_spent
           FROM transactions
           WHERE transaction_type = 'expenses' AND user_id = $1
           GROUP BY category
           ORDER BY total_spent DESC
-          LIMIT 4
+          LIMIT 5
         )
-        SELECT 
-          i.total_income,
-          i.total_expenses,
-          rb.budget_id,
-          rb.title AS budget_title,
-          rb.remaining_amount AS remaining_budget,
-          tc.category AS top_category,
-          tc.total_spent AS category_total_spent
-        FROM income_expenses i
-        CROSS JOIN remaining_budgets rb
-        LEFT JOIN top_categories tc ON TRUE
+        SELECT
+          ie.total_income,
+          tb.total_budget,
+          ie.total_expenses,
+          (ie.total_income - ie.total_expenses) AS balance,
+          (tb.total_budget - COALESCE(te.total_transactions_expenses, 0)) AS remaining_budget,
+          (ie.total_expenses - COALESCE(te.total_transactions_expenses, 0)) AS remaining_expenses_income
+        FROM income_expenses ie
+        CROSS JOIN total_budgets tb
+        CROSS JOIN total_transactions_expenses te;
       `,
       values: [userId],
     };
 
     try {
-      const result = await pool.query(incomeExpenseBudgetQuery);
+      const summaryResult = await pool.query(incomeExpenseBudgetQuery);
 
-      // Prepare the response format
-      const budgets = result.rows.reduce((acc, row) => {
-        if (!acc.find((b) => b.Title === row.budget_title)) {
-          acc.push({
-            Title: row.budget_title,
-            Remaining_Budget_Amount: Math.abs(row.remaining_budget),
-          });
-        }
-        return acc;
-      }, []);
+      const topSpendingCategoriesQuery = {
+        text: `
+          SELECT 
+            category, 
+            SUM(amount) AS total_spent
+          FROM transactions
+          WHERE transaction_type = 'expenses' AND user_id = $1
+          GROUP BY category
+          ORDER BY total_spent DESC
+          LIMIT 4
+        `,
+        values: [userId],
+      };
+      const topSpendingCategoriesResult = await pool.query(topSpendingCategoriesQuery);
 
-      const topSpendingCategories = result.rows
-        .filter((row) => row.top_category)
-        .reduce((acc, row) => {
-          if (!acc.find((c) => c.Category === row.top_category)) {
-            acc.push({
-              Category: row.top_category,
-              Total_Spent: row.category_total_spent,
-            });
-          }
-          return acc;
-        }, []);
+      const topSpendingCategories = topSpendingCategoriesResult.rows.map((row) => ({
+        Category: row.category,
+        Total_Spent: row.total_spent,
+      }));
 
       const summary = {
-        Total_Income: (result.rows[0] ? result.rows[0].total_income : 0),
-        Total_Expenses: (result.rows[0] ? result.rows[0].total_expenses : 0),
-        Budgets: budgets,
+        Total_Income: (summaryResult.rows[0] ? summaryResult.rows[0].total_income : 0),
+        Total_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].total_budget : 0),
+        Total_Expenses: (summaryResult.rows[0] ? summaryResult.rows[0].total_expenses : 0),
+        Balance: (summaryResult.rows[0] ? summaryResult.rows[0].balance : 0),
+        Remaining_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_budget : 0),
+        Remaining_Expenses: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_expenses_income : 0),
         Top_Spending_Categories: topSpendingCategories,
       };
 
-      return summary;
+      return {
+        summary,
+      };
     } catch (err) {
       console.error("Error generating financial summary:", err);
       throw err;
     }
   },
-
   
     async generateMonthlyBreakdown(userId) {
       const query = {
@@ -109,9 +104,20 @@ const Insights = {
         values: [userId],
       };
   
-      const result = await pool.query(query);
-      return result.rows;
-    },
+      try {
+        const result = await pool.query(query);
+
+        const formattedResult = result.rows.map((row) => ({
+          Month: row.month,
+          Total_Spent: row.total_expenses,
+        }));
+    
+        return formattedResult;
+      } catch (err) {
+        console.error("Error generating monthly breakdown:", err);
+        throw err;
+      }
+    }
   };
-  
+
   module.exports = Insights;
