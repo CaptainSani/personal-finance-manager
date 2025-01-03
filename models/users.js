@@ -80,13 +80,21 @@ const User = {
   },
 
   async updateUserDetails(id, newUsername, newPassword){
+
+    if (!id || !newUsername || !newPassword) {
+      throw new Error('All parameters are required');
+    }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     const query ={
       text: `UPDATE users SET username = $1, password = $2 WHERE id = $3 RETURNING *`,
       values: [newUsername, hashedPassword, id]
     };
-    const result = await pool.query(query);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query);
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Failed to update user: ${error.message}`);
+    }
   },
 };
 
