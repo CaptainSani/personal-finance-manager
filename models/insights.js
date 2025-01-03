@@ -7,42 +7,36 @@ const Insights = {
         WITH income_expenses AS (
           SELECT
             SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) AS total_income,
-            SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS total_expenses
+            SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS total_expenses,
+            COUNT(*) AS total_transactions
           FROM transactions
           WHERE user_id = $1
         ),
         total_budgets AS (
           SELECT
-            SUM(total_amount) AS total_budget
+            SUM(total_amount) AS total_budget,
+            AVG(total_amount) AS monthly_allocation
           FROM budgets
           WHERE user_id = $1
         ),
-        total_transactions_expenses AS (
-          SELECT 
-            SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS total_transactions_expenses
+        used_budget AS (
+          SELECT
+            SUM(amount) AS used_budget
           FROM transactions
-          WHERE user_id = $1
-        ),
-        top_categories AS (
-          SELECT 
-            category,
-            SUM(amount) AS total_spent
-          FROM transactions
-          WHERE transaction_type = 'expenses' AND user_id = $1
-          GROUP BY category
-          ORDER BY total_spent DESC
-          LIMIT 5
+          WHERE transaction_type = 'expenses' AND budget_id IS NOT NULL AND user_id = $1
         )
         SELECT
           ie.total_income,
-          tb.total_budget,
           ie.total_expenses,
+          ie.total_transactions,
+          tb.total_budget,
+          tb.monthly_allocation,
+          ub.used_budget,
           (ie.total_income - ie.total_expenses) AS balance,
-          (tb.total_budget - COALESCE(te.total_transactions_expenses, 0)) AS remaining_budget,
-          (ie.total_expenses - COALESCE(te.total_transactions_expenses, 0)) AS remaining_expenses_income
+          (tb.total_budget - COALESCE(ub.used_budget, 0)) AS remaining_budget
         FROM income_expenses ie
         CROSS JOIN total_budgets tb
-        CROSS JOIN total_transactions_expenses te;
+        CROSS JOIN used_budget ub;
       `,
       values: [userId],
     };
@@ -72,11 +66,14 @@ const Insights = {
 
       const summary = {
         Total_Income: (summaryResult.rows[0] ? summaryResult.rows[0].total_income : 0),
-        Total_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].total_budget : 0),
         Total_Expenses: (summaryResult.rows[0] ? summaryResult.rows[0].total_expenses : 0),
-        Balance: (summaryResult.rows[0] ? summaryResult.rows[0].balance : 0),
+        Total_Transactions: (summaryResult.rows[0] ? summaryResult.rows[0].total_transactions : 0),
+        Total_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].total_budget : 0),
+        Monthly_Allocation: (summaryResult.rows[0] ? summaryResult.rows[0].monthly_allocation : 0),
+        Net_Balance: (summaryResult.rows[0] ? summaryResult.rows[0].balance : 0),
+        Used_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].used_budget : 0),
         Remaining_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_budget : 0),
-        Remaining_Expenses: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_expenses_income : 0),
+        //Remaining_Expenses: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_expenses_income : 0),
         Top_Spending_Categories: topSpendingCategories,
       };
 
@@ -109,6 +106,8 @@ const Insights = {
 
         const formattedResult = result.rows.map((row) => ({
           Month: row.month,
+          Total_Income: row.total_income,
+          Total_Expenses: row.total_expenses,
           Total_Spent: row.total_expenses,
         }));
     

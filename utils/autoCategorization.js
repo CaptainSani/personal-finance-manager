@@ -1,7 +1,7 @@
 const categories = {
   shopping: ['supermarket', 'grocery', 'store', 'foodstuffs', 'clothes', 'mall', 'boutique', 'retail', 'essentials'],
   utilities: ['electricity', 'water', 'gas', 'laundry', 'garbage', 'power', 'sewage', 'heating', 'cable bill'],
-  entertainment: ['cinema', 'football', 'game', 'beach', 'club', 'tgif', 'date night', 'concert', 'karaoke', 'sports'],
+  entertainment: ['cinema', 'football', 'game', 'beach', 'club', 'tgif', 'date night', 'concert', 'karaoke', 'sports', 'oblee', 'detty december'],
   transport: ['uber', 'bolt', 'in-drive', 'bus', 'train', 'cab', 'taxi', 'fare', 'metro', 'parking'],
   subscription: ['data', 'dstv', 'gotv', 'gym', 'netflix', 'spotify', 'audible', 'membership', 'cloud'],
   dining: ['restaurant', 'dinner', 'breakfast', 'lunch', 'coffee', 'café', 'bar', 'fast food', 'snack', 'takeaway'],
@@ -19,6 +19,7 @@ const categories = {
   blackTax: ['friends', 'family', 'relatives', 'assistance', 'stipend', 'society', 'community'],
   savings: ['savings', 'deposit', 'investment', 'mutual funds', 'bonds', 'crypto', 'wallet'],
   insurance: ['insurance', 'policy', 'cover', 'plan', 'premium'],
+  salary: ['salary', 'allowance', 'commission'],
   luxury: ['designer', 'luxury', 'premium', 'high-end', 'indulgence', 'extravagant'],
   taxation: ['tax', 'fine', 'levy', 'government', 'customs', 'fee', 'license'],
   others: ['random', 'uncategorized', 'unknown', 'emergency', 'others', 'miscellaneous']
