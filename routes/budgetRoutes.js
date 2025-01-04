@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const BudgetController = require('../controller/budgetController');
-const { authenticate } = require('../midddleware/auth');
+const { authenticate } = require('../middleware/auth');
 
 // Create a new budget
 router.post('/budgets/create', authenticate, BudgetController.createBudget);
@@ -13,7 +13,7 @@ router.get('/budgets', authenticate, BudgetController.getAllBudgets);
 router.get('/budgets/:id', authenticate, BudgetController.getBudgetById);
 
 // Update a budget
-router.put('/budgets/:id', authenticate, BudgetController.updateBudget);
+router.patch('/budgets/:id', authenticate, BudgetController.updateBudget);
 
 // Delete a budget
 router.delete('/budgets/:id', authenticate, BudgetController.deleteBudget);

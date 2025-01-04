@@ -9,7 +9,7 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
   ssl: {
-    rejectUnauthorized: false, // Required for Render PostgreSQL
+    rejectUnauthorized: false,
   },
 });
 
@@ -24,8 +24,8 @@ pool.query("SELECT NOW()", (err, res) => {
 pool.query(
   `CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
-      username VARCHAR(50) NOT NULL,
-      email VARCHAR(100) NOT NULL,
+      username VARCHAR(50) UNIQUE NOT NULL,
+      email VARCHAR(100) UNIQUE NOT NULL,
       password VARCHAR(255) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ); `,
@@ -76,12 +76,11 @@ pool.query(
     `CREATE TABLE IF NOT EXISTS transactions (
       id SERIAL PRIMARY KEY,
       amount DECIMAL(10, 2) NOT NULL,
-      category_id INTEGER NOT NULL,
+      category VARCHAR(20) NOT NULL,
       narration VARCHAR(200) NOT NULL,
       budget_id INTEGER,
       user_id INTEGER NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (category_id) REFERENCES categories(id),
       FOREIGN KEY (budget_id) REFERENCES budgets(id),
       FOREIGN KEY (user_id) REFERENCES users(id)
     ); `,

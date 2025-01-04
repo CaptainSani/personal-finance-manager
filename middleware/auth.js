@@ -4,7 +4,10 @@ const jwt = require("jsonwebtoken");
 const authenticate = async (req, res, next) => {
   const authHeader = req.header("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer "))
-    return res.status(401).send("Access denied. No token provided.");
+    return res.status(401).json({
+  status:"Unathorized",
+  statusCode: 401,
+  error:"Access Denied: No Token Inserted."});
 
   const token = authHeader.replace("Bearer ", "");
 
@@ -13,7 +16,11 @@ const authenticate = async (req, res, next) => {
     req.user = { id: decoded.userId };
     next();
   } catch (ex) {
-    res.status(401).send("Invalid token.");
+    console.error("Authentication Error:", ex.message);
+    res.status(401).json({
+      status:"Unathorized",
+      statusCode: 401,
+      error:"Authentication Denied: Invalid Token Inserted."});
   }
 };
 

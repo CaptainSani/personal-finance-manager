@@ -4,20 +4,26 @@ const bcrypt = require("bcryptjs");
 
 const User = {
   async createUser(username, email, password) {
-    //check if a user already exists
-    const existingUserQuery = {
-      text: `SELECT * FROM users WHERE username = $1 OR email = $2`,
-      values: [username, email],
+    //check if a username or email already exists
+    const existingUsernameQuery = {
+      text: `SELECT * FROM users WHERE username = $1`,
+      values: [username],
     };
-    const existingUserResult = await pool.query(existingUserQuery);
+    const existingUsernameResult = await pool.query(existingUsernameQuery);
 
-    
-
-    if (existingUserResult.rows.length > 0) {
-      throw new Error("User already exists, Please login");
+    if (existingUsernameResult.rows.length > 0) {
+      throw new Error("Username Already Exists, Please Choose Another One");
     }
 
-  
+    const existingEmailQuery = {
+      text: `SELECT * FROM users WHERE email = $1`,
+      values: [email],
+    };
+    const existingEmailResult = await pool.query(existingEmailQuery);
+
+    if (existingEmailResult.rows.length > 0) {
+      throw new Error("Email Already Exists, Please Login if You Already Have An Account Or Kindly Use Another Email");
+    }
 
     //create a new user
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -68,6 +74,34 @@ const User = {
     const query = {
       text: `SELECT * FROM users where id = $1`,
       values: [id],
+    };
+    const result = await pool.query(query);
+    return result.rows[0];
+  },
+
+  async updateUsername(id, newUsername) {
+    const query = {
+      text: `UPDATE users SET username = $1 WHERE id = $2 RETURNING *`,
+      values: [newUsername, id],
+    };
+    const result = await pool.query(query);
+    return result.rows[0];
+  },
+
+  async updateEmail(id, newEmail) {
+    const query = {
+      text: `UPDATE users SET email = $1 WHERE id = $2 RETURNING *`,
+      values: [newEmail, id],
+    };
+    const result = await pool.query(query);
+    return result.rows[0];
+  },
+
+  async updatePassword(id, newPassword) {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const query = {
+      text: `UPDATE users SET password = $1 WHERE id = $2 RETURNING *`,
+      values: [hashedPassword, id],
     };
     const result = await pool.query(query);
     return result.rows[0];

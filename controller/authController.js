@@ -9,23 +9,35 @@ const authController = {
         if (!username || !email || !password) {
           return res.status(400).json({ 
             status: "Bad Request",
-            statusCode: "400",
-            error: 'Please provide all required fields' });
+            statusCode: 400,
+            error: 'Please Input All Required Fields' });
         }
   
-        const user = await User.createUser(username, email, password);
+        await User.createUser(username, email, password);
 
         res.status(200).json({
           status: "Success OK",
-          statusCode: "200",
-          message: `User ${username} Registered Succesfully` } );
+          statusCode: 200,
+          message: `User ${username} Registered Succesfully` });
 
-      } catch (error) {
-        console.error(error);
+        } catch (error) {
+          console.error("Error in registration:", error.message);
+    
+          if (
+            error.message.includes("Username Already Exists") ||
+            error.message.includes("Email Already Exists")
+          ) {
+            return res.status(409).json({
+              status: "Conflict",
+              statusCode: 409,
+              error: error.message,
+            });
+          }
+
         res.status(500).json({ 
           status: "Internal Server Error",
-          statusCode: "500",
-          error: 'Registration failed, Login ?' });
+          statusCode: 500,
+          error: 'Registration Failed, Please Try Again Later' });
       }
     },
 
@@ -36,7 +48,7 @@ const authController = {
           if (!email || !password) {
             return res.status(400).json({ 
               status: "Bad Request",
-              statusCode: "400",
+              statusCode: 400,
               error: 'Please provide all required fields' });
           }
     
@@ -47,15 +59,15 @@ const authController = {
 
           res.json({ 
             status: "Success OK",
-            statusCode: "200",
+            statusCode: 200,
             message: `${email} Logged-In Successfully` , token });
 
         } catch (error) {
           console.error(error);
           res.status(401).json({
             status: "Unathourized",
-            statusCode: "401",
-            error: 'Invalid email or password' });
+            statusCode: 401,
+            error: 'Invalid Email Or Password' });
         }
       },
 
