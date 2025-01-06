@@ -1,11 +1,14 @@
 const db = require("../config/database");
 
 class Budget {
- static async create(title, totalAmount, duration, userId) {
-
-    if (typeof title !== 'string' || typeof totalAmount !== 'number' || typeof duration !== 'string' ||
-      typeof userId !== 'number') {
-      throw new Error('Invalid Input Types');
+  static async create(title, totalAmount, duration, userId) {
+    if (
+      typeof title !== "string" ||
+      typeof totalAmount !== "number" ||
+      typeof duration !== "string" ||
+      typeof userId !== "number"
+    ) {
+      throw new Error("Invalid Input Types");
     }
     const query = {
       text: `INSERT INTO budgets (title, total_amount, duration, user_id) VALUES ($1, $2, $3, $4) RETURNING *`,
@@ -52,15 +55,15 @@ class Budget {
     const fields = [];
     const values = [];
     let index = 1;
-  
+
     for (const [key, value] of Object.entries(updatedData)) {
       fields.push(`${key} = $${index}`);
       values.push(value);
       index++;
     }
-  
+
     values.push(id, userId);
-  
+
     const query = {
       text: `UPDATE budgets 
       SET ${fields.join(", ")} 
@@ -68,7 +71,7 @@ class Budget {
       RETURNING *`,
       values,
     };
-  
+
     try {
       const result = await db.query(query);
       return result.rows[0];
@@ -77,7 +80,7 @@ class Budget {
       throw err;
     }
   }
-  
+
   static async deleteById(id, userId) {
     const query = {
       text: `DELETE FROM budgets WHERE id = $1 AND user_id = $2 RETURNING *`,
@@ -93,17 +96,17 @@ class Budget {
   }
 
   static async findById(id) {
-  const query = {
-    text: `SELECT * FROM budgets WHERE id = $1`,
-    values: [id],
-  };
-  try {
-    const result = await db.query(query);
-    return result.rows[0];
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+    const query = {
+      text: `SELECT * FROM budgets WHERE id = $1`,
+      values: [id],
+    };
+    try {
+      const result = await db.query(query);
+      return result.rows[0];
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 }
 
