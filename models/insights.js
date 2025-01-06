@@ -33,7 +33,7 @@ const Insights = {
           tb.monthly_allocation,
           ub.used_budget,
           (ie.total_income - ie.total_expenses) AS balance,
-          (tb.total_budget - COALESCE(ub.used_budget, 0)) AS remaining_budget
+           ABS(tb.total_budget - COALESCE(ub.used_budget, 0)) AS remaining_budget
         FROM income_expenses ie
         CROSS JOIN total_budgets tb
         CROSS JOIN used_budget ub;
@@ -41,8 +41,38 @@ const Insights = {
       values: [userId],
     };  
 
+    const lastTransactionsQuery = {
+      text: `
+        SELECT
+          amount,
+          transaction_type,
+          category
+        FROM transactions
+        WHERE user_id = $1
+        ORDER BY created_at DESC
+        LIMIT 3
+      `,
+      values: [userId],
+    };
+
+    const lastBudgetsQuery = {
+      text: `
+        SELECT
+          total_amount,
+          title,
+          duration
+        FROM budgets
+        WHERE user_id = $1
+        ORDER BY created_at DESC
+        LIMIT 3
+      `,
+      values: [userId],
+    };
+
     try {
       const summaryResult = await pool.query(incomeExpenseBudgetQuery);
+      const transactionsResult = await pool.query(lastTransactionsQuery);
+    const budgetsResult = await pool.query(lastBudgetsQuery);
 
       const topSpendingCategoriesQuery = {
         text: `
@@ -74,6 +104,16 @@ const Insights = {
         Used_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].used_budget : 0),
         Remaining_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_budget : 0),
         Top_Spending_Categories: topSpendingCategories,
+        Last_Transactions: transactionsResult.rows.map((row) => ({
+          Amount: row.amount || 0,
+          Transaction_Type: row.transaction_type,
+          Category: row.category,
+        })),
+        Last_Budgets: budgetsResult.rows.map((row) => ({
+          Total_Amount: row.total_amount || 0,
+          Title: row.title,
+          Duration: row.duration,
+        })),
       };
 
       return {
