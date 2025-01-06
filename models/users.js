@@ -77,7 +77,6 @@ const User = {
     const result = await pool.query(query);
     return result.rows[0];
   },
-
 };
 
 module.exports = User;
