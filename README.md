@@ -104,7 +104,7 @@ DB_URI=your_database_uri
 
 ## Postman Documentation
 
-[Postman Endpoints Documnetation](https://documenter.getpostman.com/view/38698911/2sAYJ1mi48)
+[Postman Endpoints Documentation](https://documenter.getpostman.com/view/38698911/2sAYJ1mi48)
 
 ## Entity Relationship Diagram
 
