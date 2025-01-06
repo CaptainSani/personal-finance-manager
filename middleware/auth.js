@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 
-// Middleware to authenticate JWT token for protected routes
 const authenticate = async (req, res, next) => {
   const authHeader = req.header("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer "))
     return res.status(401).json({
-  status:"Unathorized",
-  statusCode: 401,
-  error:"Access Denied: No Token Inserted."});
+      status: "Unathorized",
+      statusCode: 401,
+      error: "Access Denied: No Token Inserted.",
+    });
 
   const token = authHeader.replace("Bearer ", "");
 
@@ -18,9 +18,10 @@ const authenticate = async (req, res, next) => {
   } catch (ex) {
     console.error("Authentication Error:", ex.message);
     res.status(401).json({
-      status:"Unathorized",
+      status: "Unathorized",
       statusCode: 401,
-      error:"Authentication Error: Expired Token, Please Login Again."});
+      error: "Authentication Error: Expired Token, Please Login Again.",
+    });
   }
 };
 
