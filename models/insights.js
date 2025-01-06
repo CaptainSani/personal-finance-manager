@@ -69,11 +69,6 @@ const Insights = {
       values: [userId],
     };
 
-    try {
-      const summaryResult = await pool.query(incomeExpenseBudgetQuery);
-      const transactionsResult = await pool.query(lastTransactionsQuery);
-    const budgetsResult = await pool.query(lastBudgetsQuery);
-
       const topSpendingCategoriesQuery = {
         text: `
           SELECT 
@@ -87,11 +82,40 @@ const Insights = {
         `,
         values: [userId],
       };
+
+      const monthlyBreakdownQuery = {
+          text: `
+            SELECT
+            TO_CHAR(created_at, 'YYYY-MM') AS Month,
+            SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) AS Total_Income,
+            SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS Total_Expenses
+          FROM transactions
+          WHERE user_id = $1
+          GROUP BY Month
+          ORDER BY Month ASC
+          `,
+          values: [userId],
+        };
+
+      try {
+        const summaryResult = await pool.query(incomeExpenseBudgetQuery);
+
+        const transactionsResult = await pool.query(lastTransactionsQuery);
+
+      const budgetsResult = await pool.query(lastBudgetsQuery);
+
       const topSpendingCategoriesResult = await pool.query(topSpendingCategoriesQuery);
 
       const topSpendingCategories = topSpendingCategoriesResult.rows.map((row) => ({
         Category: row.category,
         Total_Spent: row.total_spent,
+      }));
+      const monthlyResult = await pool.query(monthlyBreakdownQuery);
+
+      const monthlyBreakdownResult = monthlyResult.rows.map((row) => ({
+        Month: row.month,
+        Total_Income: row.total_income,
+        Total_Expenses: row.total_expenses,
       }));
 
       const summary = {
@@ -104,6 +128,7 @@ const Insights = {
         Used_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].used_budget : 0),
         Remaining_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_budget : 0),
         Top_Spending_Categories: topSpendingCategories,
+        Monthly_Breakdown:  monthlyBreakdownResult,
         Last_Transactions: transactionsResult.rows.map((row) => ({
           Amount: row.amount || 0,
           Transaction_Type: row.transaction_type,
@@ -124,37 +149,5 @@ const Insights = {
       throw err;
     }
   },
-  
-    async generateMonthlyBreakdown(userId) {
-      const query = {
-        text: `
-          SELECT
-          TO_CHAR(created_at, 'YYYY-MM') AS Month,
-          SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) AS Total_Income,
-          SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS Total_Expenses
-        FROM transactions
-        WHERE user_id = $1
-        GROUP BY Month
-        ORDER BY Month ASC
-        `,
-        values: [userId],
-      };
-  
-      try {
-        const result = await pool.query(query);
-
-        const formattedResult = result.rows.map((row) => ({
-          Month: row.month,
-          Total_Income: row.total_income,
-          Total_Expenses: row.total_expenses,
-        }));
-    
-        return formattedResult;
-      } catch (err) {
-        console.error("Error generating monthly breakdown:", err);
-        throw err;
-      }
-    }
-  };
-
+};
   module.exports = Insights;
