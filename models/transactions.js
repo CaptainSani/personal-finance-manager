@@ -1,19 +1,25 @@
 const pool = require("../config/database");
 
-// Insert a new transaction
 const createTransaction = async (transaction) => {
-  const { amount, narration, category, transaction_type, budget_id, user_id } = transaction;
+  const { amount, narration, category, transaction_type, budget_id, user_id } =
+    transaction;
   const query = `
       INSERT INTO transactions (amount, narration, category, transaction_type, budget_id, user_id)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-  const values = [amount, narration, category, transaction_type, budget_id, user_id];
+  const values = [
+    amount,
+    narration,
+    category,
+    transaction_type,
+    budget_id,
+    user_id,
+  ];
   const result = await pool.query(query, values);
   return result.rows[0];
 };
 
-// Get all transactions
 const getAllTransactions = async (user_id, filters = {}) => {
   const { date, category, budget } = filters;
   let query = `SELECT * FROM transactions WHERE user_id = $1`;
@@ -38,14 +44,12 @@ const getAllTransactions = async (user_id, filters = {}) => {
   return result.rows;
 };
 
-// Get a single transaction by ID
 const getTransactionById = async (id, user_id) => {
   const query = `SELECT * FROM transactions WHERE id = $1 AND user_id = $2`;
   const result = await pool.query(query, [id, user_id]);
   return result.rows[0];
 };
 
-// Update a transaction
 const updateTransaction = async (id, updatedData, user_id) => {
   if (Object.keys(updatedData).length === 0) {
     throw new Error("No fields provided to update");
@@ -77,7 +81,6 @@ const updateTransaction = async (id, updatedData, user_id) => {
   }
 };
 
-// Delete a transaction
 const deleteTransaction = async (id, user_id) => {
   const query = `DELETE FROM transactions WHERE id = $1 AND user_id = $2 RETURNING *`;
   const result = await pool.query(query, [id, user_id]);

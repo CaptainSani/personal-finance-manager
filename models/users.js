@@ -1,10 +1,8 @@
 const pool = require("../config/database");
 const bcrypt = require("bcryptjs");
 
-
 const User = {
   async createUser(username, email, password) {
-    //check if a username or email already exists
     const existingUsernameQuery = {
       text: `SELECT * FROM users WHERE username = $1`,
       values: [username],
@@ -22,10 +20,11 @@ const User = {
     const existingEmailResult = await pool.query(existingEmailQuery);
 
     if (existingEmailResult.rows.length > 0) {
-      throw new Error("Email Already Exists, Please Login if You Already Have An Account Or Kindly Use Another Email");
+      throw new Error(
+        "Email Already Exists, Please Login if You Already Have An Account Or Kindly Use Another Email"
+      );
     }
 
-    //create a new user
     const hashedPassword = await bcrypt.hash(password, 10);
     const query = {
       text: `INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *`,
@@ -50,7 +49,7 @@ const User = {
 
       if (!isValidPassword) {
         throw new Error("Invalid password");
-      }else{
+      } else {
         console.log("user logged in successfully");
       }
 
@@ -77,24 +76,6 @@ const User = {
     };
     const result = await pool.query(query);
     return result.rows[0];
-  },
-
-  async updateUserDetails(id, newUsername, newPassword){
-
-    if (!id || !newUsername || !newPassword) {
-      throw new Error('All parameters are required');
-    }
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    const query ={
-      text: `UPDATE users SET username = $1, password = $2 WHERE id = $3 RETURNING *`,
-      values: [newUsername, hashedPassword, id]
-    };
-    try {
-      const result = await pool.query(query);
-      return result.rows[0];
-    } catch (error) {
-      throw new Error(`Failed to update user: ${error.message}`);
-    }
   },
 };
 

@@ -3,8 +3,6 @@ const budgetModel = require("../models/budgets");
 
 const { autoCategorize } = require("../utils/autoCategorization");
 
-
-// Create a new transaction
 const createTransaction = async (req, res) => {
   try {
     const { amount, narration, transaction_type, budget_id } = req.body;
@@ -72,7 +70,6 @@ const createTransaction = async (req, res) => {
   }
 };
 
-
 const getAllTransactions = async (req, res) => {
   try {
     const user_id = req.user.id;
@@ -95,7 +92,6 @@ const getAllTransactions = async (req, res) => {
     });
   }
 };
-
 
 const getTransactionById = async (req, res) => {
   try {
@@ -124,14 +120,13 @@ const getTransactionById = async (req, res) => {
   }
 };
 
-
 const updateTransaction = async (req, res) => {
   try {
     const { id } = req.params;
     const user_id = req.user.id;
     const { amount, narration, transaction_type, budget_id } = req.body;
 
-    const updatedData = { };
+    const updatedData = {};
 
     if (amount !== undefined) {
       const numericAmount = parseFloat(amount);
@@ -153,7 +148,7 @@ const updateTransaction = async (req, res) => {
     if (transaction_type) {
       updatedData.transaction_type = transaction_type;
     }
-      
+
     if (budget_id !== undefined) {
       if (!Number.isInteger(Number(budget_id))) {
         return res.status(400).json({
@@ -181,7 +176,7 @@ const updateTransaction = async (req, res) => {
         error: "No Fields Provided To Update",
       });
     }
-  
+
     const transaction = await transactionModel.updateTransaction(
       id,
       updatedData,

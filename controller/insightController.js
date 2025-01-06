@@ -1,12 +1,11 @@
-const Insights = require('../models/insights');
+const Insights = require("../models/insights");
 
 const insightsController = {
   async generateSummary(req, res) {
     try {
+      const { id: userId } = req.user;
 
-      const { id: userId } = req.user; 
-
-     const summary = await Insights.generateSummary(userId);
+      const summary = await Insights.generateSummary(userId);
 
       res.status(200).json({
         status: "Success",
@@ -18,14 +17,14 @@ const insightsController = {
       res.status(500).json({
         status: "Internal Server Error",
         statusCode: 500,
-        message: `Failed To Generate Financial Insight Summary: ${error.message}` ,
+        message: `Failed To Generate Financial Insight Summary: ${error.message}`,
       });
     }
   },
 
   async generateMonthlyBreakdown(req, res) {
     try {
-      const { id: userId } = req.user
+      const { id: userId } = req.user;
       const breakdown = await Insights.generateMonthlyBreakdown(userId);
 
       res.status(200).json({

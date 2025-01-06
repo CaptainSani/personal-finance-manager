@@ -1,7 +1,6 @@
 const { Pool } = require("pg");
 const env = require("dotenv").config();
 
-// Connect to the PostgreSQL database
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -38,9 +37,8 @@ pool.query(
   }
 );
 
-
 pool.query(
-    `CREATE TABLE IF NOT EXISTS budgets (
+  `CREATE TABLE IF NOT EXISTS budgets (
       id SERIAL PRIMARY KEY,
       title VARCHAR(100) NOT NULL,
       total_amount DECIMAL(10, 2) NOT NULL,
@@ -49,17 +47,17 @@ pool.query(
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     ); `,
-    (err, res) => {
-      if (err) {
-        console.error("Error creating budgets table:", err);
-      } else {
-        console.log("Budgets Table created successfully");
-      }
+  (err, res) => {
+    if (err) {
+      console.error("Error creating budgets table:", err);
+    } else {
+      console.log("Budgets Table created successfully");
     }
-  );
-  
-  pool.query(
-    `DO $$
+  }
+);
+
+pool.query(
+  `DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'transaction_type') THEN
         CREATE TYPE transaction_type AS ENUM ('income', 'expenses');
@@ -78,13 +76,13 @@ END$$;
       FOREIGN KEY (budget_id) REFERENCES budgets(id),
       FOREIGN KEY (user_id) REFERENCES users(id)
     ); `,
-    (err, res) => {
-      if (err) {
-        console.error("Error creating transactions table:", err);
-      } else {
-        console.log("Transactions Table created successfully");
-      }
+  (err, res) => {
+    if (err) {
+      console.error("Error creating transactions table:", err);
+    } else {
+      console.log("Transactions Table created successfully");
     }
-  );
+  }
+);
 
 module.exports = pool;
