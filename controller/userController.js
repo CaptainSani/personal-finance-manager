@@ -96,25 +96,26 @@ const userController = {
           error: "Please Input All Required Fields",
         });
       }
-      const user = await User.updateUserDetails(id, username, password);
+      const updatedUser = await User.updateUserDetails(id, username, password);
 
-      if (!user) {
+      if (!updatedUser) {
         res.status(404).json({
           status: "Not Found",
           statusCode: 404,
           message: `User not found`,
         });
-      } else {
-        res.status(200).json({
+      }
+
+      return res.status(200).json({
           status: "Success OK",
           statusCode: 200,
           message: `User Updated Succesfully`,
           user: {
-            id: user.id,
-            username: user.username,
+            id: updatedUser.id,
+            username: updatedUser.username,
           },
         });
-      }
+      
     } catch (err) {
       console.error("Error in updateUser:", err);
       res.status(500).json({
