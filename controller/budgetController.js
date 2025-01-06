@@ -1,47 +1,55 @@
-const Budget = require('../models/budgets');
-
+const Budget = require("../models/budgets");
 
 const budgetController = {
   async createBudget(req, res) {
     try {
       const { title, total_amount, duration } = req.body;
-  
+
       if (!title || !total_amount || !duration) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           status: "Bad Request",
           statusCode: 400,
-          error: 'Please Input All Required Fields' });
+          error: "Please Input All Required Fields",
+        });
       }
 
       const numerictotal_amount = parseFloat(total_amount);
-    if (isNaN(numerictotal_amount)) {
-      return res.status(400).json({ 
-        status: "Bad Request",
-        statusCode: 400,
-        error: 'Invalid total_amount: Must Be A Number' });
-    }
+      if (isNaN(numerictotal_amount)) {
+        return res.status(400).json({
+          status: "Bad Request",
+          statusCode: 400,
+          error: "Invalid total_amount: Must Be A Number",
+        });
+      }
 
-    if (!req.user || !req.user.id) {
-      return res.status(403).json({
-        status: "Forbidden",
-        statusCode: 403,
-        error: 'Unauthorized Request',
-      });
-    }
-  
-      const budget = await Budget.create(title, numerictotal_amount, duration, req.user.id);
+      if (!req.user || !req.user.id) {
+        return res.status(403).json({
+          status: "Forbidden",
+          statusCode: 403,
+          error: "Unauthorized Request",
+        });
+      }
+
+      const budget = await Budget.create(
+        title,
+        numerictotal_amount,
+        duration,
+        req.user.id
+      );
 
       res.status(200).json({
         status: "Success OK",
         statusCode: 200,
         message: "Budget Created Succesfully",
-        budget});
+        budget,
+      });
     } catch (err) {
       console.error("Error in createBudget:", err);
-    res.status(500).json({
-      status: "Internal Server Error",
-      statusCode: 500, 
-      message: `Error Creating Budget: ${err.message}` });
+      res.status(500).json({
+        status: "Internal Server Error",
+        statusCode: 500,
+        message: `Error Creating Budget: ${err.message}`,
+      });
     }
   },
 
@@ -51,13 +59,15 @@ const budgetController = {
       res.status(200).json({
         status: "Success OK",
         statusCode: 200,
-        budgets});
+        budgets,
+      });
     } catch (err) {
-      console.error("Error in getAllBudgets:", err); 
-    res.status(500).json({
-      status: "Internal Server Error",
-      statusCode: 500,
-      message: `Error Getting All Budgets: ${err.message}` });
+      console.error("Error in getAllBudgets:", err);
+      res.status(500).json({
+        status: "Internal Server Error",
+        statusCode: 500,
+        message: `Error Getting All Budgets: ${err.message}`,
+      });
     }
   },
 
@@ -65,22 +75,25 @@ const budgetController = {
     try {
       const budget = await Budget.getById(req.params.id, req.user.id);
       if (!budget) {
-        res.status(404).json({ 
+        res.status(404).json({
           status: "Not Found",
           statusCode: 404,
-          message: `Budget Not Found` });
+          message: `Budget Not Found`,
+        });
       } else {
         res.status(200).json({
           status: "Success OK",
           statusCode: 200,
-          budget});
+          budget,
+        });
       }
     } catch (err) {
       console.error("Error in getBudgetById:", err);
       res.status(500).json({
         status: "Internal Server Error",
         statusCode: 500,
-        message: `Error Getting Budget With ID: ${err.message}` });
+        message: `Error Getting Budget With ID: ${err.message}`,
+      });
     }
   },
 
@@ -88,7 +101,7 @@ const budgetController = {
     try {
       const { title, total_amount, duration } = req.body;
 
-      const updatedData = { };
+      const updatedData = {};
 
       if (total_amount !== undefined) {
         const numericTotalAmount = parseFloat(total_amount);
@@ -101,15 +114,15 @@ const budgetController = {
         }
         updatedData.total_amount = numericTotalAmount;
       }
-  
+
       if (title) {
         updatedData.title = title;
       }
-  
+
       if (duration) {
         updatedData.duration = duration;
-        }
-      
+      }
+
       if (Object.keys(updatedData).length === 0) {
         return res.status(400).json({
           status: "Bad Request",
@@ -117,13 +130,13 @@ const budgetController = {
           error: "No Fields Provided For Update.",
         });
       }
-      
+
       const budget = await Budget.update(
         req.params.id,
         updatedData,
         req.user.id
       );
-  
+
       if (!budget) {
         return res.status(404).json({
           status: "Not Found",
@@ -131,7 +144,7 @@ const budgetController = {
           message: "Budget not found.",
         });
       }
-  
+
       res.status(200).json({
         status: "Success OK",
         statusCode: 200,
@@ -146,31 +159,34 @@ const budgetController = {
         message: `Error updating budget: ${err.message}`,
       });
     }
-  },  
+  },
 
   async deleteBudget(req, res) {
     try {
       const budget = await Budget.deleteById(req.params.id, req.user.id);
 
       if (!budget) {
-        res.status(404).json({ 
+        res.status(404).json({
           status: "Bad Request",
           statusCode: 404,
-          error: `Budget Not found` });
+          error: `Budget Not found`,
+        });
       } else {
-        res.status(200).json({ 
+        res.status(200).json({
           status: "Success OK",
           statusCode: 200,
-          message: `Budget Deleted Successfully` });
+          message: `Budget Deleted Successfully`,
+        });
       }
     } catch (err) {
       console.error("Error in deleteBudget:", err);
-      res.status(500).json({ 
-      status: "Internal Server Error",
-      statusCode: 500,
-      message: `Error Deleting Budget: ${err.message}` });
+      res.status(500).json({
+        status: "Internal Server Error",
+        statusCode: 500,
+        message: `Error Deleting Budget: ${err.message}`,
+      });
     }
-  }
-}
+  },
+};
 
 module.exports = budgetController;
