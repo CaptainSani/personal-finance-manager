@@ -30,7 +30,7 @@ const userController = {
         user: {
           username: user.username,
           email: user.email,
-          password: user.password
+          password: user.password,
         },
       });
     } catch (error) {
@@ -96,11 +96,7 @@ const userController = {
           error: "Please Input All Required Fields",
         });
       }
-      const user = await User.updateUserDetails(
-        id,
-        username,
-        password
-      );
+      const user = await User.updateUserDetails(id, username, password);
 
       if (!user) {
         res.status(404).json({
@@ -113,10 +109,10 @@ const userController = {
           status: "Success OK",
           statusCode: 200,
           message: `User Updated Succesfully`,
-          user:{
+          user: {
             id: user.id,
             username: user.username,
-          }
+          },
         });
       }
     } catch (err) {
@@ -127,7 +123,7 @@ const userController = {
         message: `Error Updating User: ${err.message}`,
       });
     }
-  },  
+  },
 };
 
 module.exports = userController;
