@@ -8,7 +8,7 @@ const Insights = {
           SELECT
             SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) AS total_income,
             SUM(CASE WHEN transaction_type = 'expenses' THEN amount ELSE 0 END) AS total_expenses,
-            COUNT(*) AS total_transactions
+            SUM(amount) AS total_transactions
           FROM transactions
           WHERE user_id = $1
         ),
@@ -39,7 +39,7 @@ const Insights = {
         CROSS JOIN used_budget ub;
       `,
       values: [userId],
-    };
+    };  
 
     try {
       const summaryResult = await pool.query(incomeExpenseBudgetQuery);
@@ -73,7 +73,6 @@ const Insights = {
         Net_Balance: (summaryResult.rows[0] ? summaryResult.rows[0].balance : 0),
         Used_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].used_budget : 0),
         Remaining_Budget: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_budget : 0),
-        //Remaining_Expenses: (summaryResult.rows[0] ? summaryResult.rows[0].remaining_expenses_income : 0),
         Top_Spending_Categories: topSpendingCategories,
       };
 
@@ -108,7 +107,6 @@ const Insights = {
           Month: row.month,
           Total_Income: row.total_income,
           Total_Expenses: row.total_expenses,
-          Total_Spent: row.total_expenses,
         }));
     
         return formattedResult;
