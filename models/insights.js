@@ -46,6 +46,7 @@ const Insights = {
         SELECT
           amount,
           narration,
+          transaction_type,
           created_at
         FROM transactions
         WHERE user_id = $1
@@ -133,6 +134,7 @@ const Insights = {
         Last_Transactions: transactionsResult.rows.map((row) => ({
           Amount: row.amount || 0,
           Narration: row.narration,
+          Transaction_Type: row.transaction_type,
           Date_Created: row.created_at,
         })),
         Last_Budgets: budgetsResult.rows.map((row) => ({
