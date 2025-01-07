@@ -45,8 +45,8 @@ const Insights = {
       text: `
         SELECT
           amount,
-          transaction_type,
-          category
+          narration,
+          created_at
         FROM transactions
         WHERE user_id = $1
         ORDER BY created_at DESC
@@ -60,7 +60,8 @@ const Insights = {
         SELECT
           total_amount,
           title,
-          duration
+          duration,
+          created_at
         FROM budgets
         WHERE user_id = $1
         ORDER BY created_at DESC
@@ -131,13 +132,14 @@ const Insights = {
         Monthly_Breakdown:  monthlyBreakdownResult,
         Last_Transactions: transactionsResult.rows.map((row) => ({
           Amount: row.amount || 0,
-          Transaction_Type: row.transaction_type,
-          Category: row.category,
+          Narration: row.narration,
+          Date_Created: row.created_at,
         })),
         Last_Budgets: budgetsResult.rows.map((row) => ({
           Total_Amount: row.total_amount || 0,
           Title: row.title,
           Duration: row.duration,
+          Date_Created: row.created_at,
         })),
       };
 
